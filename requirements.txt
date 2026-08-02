@@ -1,6 +1,9 @@
 google-genai>=1.0.0
 anthropic>=0.40.0
 openai>=1.50.0
+groq>=0.1.0
+flask>=3.0.0
+gunicorn>=21.0.0
 python-dotenv>=1.0.0
 rapidfuzz>=3.0.0
 requests>=2.31.0
