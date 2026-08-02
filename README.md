@@ -74,6 +74,14 @@ python -m eval.scorer --fuzzy-threshold 85
 python summarize_report.py --report results/report.csv
 ```
 
+## Interactive Web UI
+
+Launch the side-by-side model comparison web interface:
+```bash
+python app.py
+```
+Open [http://127.0.0.1:5000](http://127.0.0.1:5000) in your browser to upload new bill images or browse sample extractions.
+
 ## Pushing to Zoho Books
 
 Push the best model's top 5 bills as expenses:
@@ -128,6 +136,16 @@ I set out to test Gemini, Claude, and Groq on the same 14 bills, but Claude ende
 | line_items | 0 | 0 |
 
 *Note: Gemini hallucinated a vendor name on a handwritten tea stall bill that did not contain one. Groq correctly returned null.*
+
+## Zoho Books Integration 
+
+![Pushed expenses in Zoho Books](docs/zoho_expenses.png)
+
+Expenses were created via the Zoho Books API using the extraction results 
+from the best-performing model (Gemini). See `results/zoho_push_log.json` 
+for the actual expense IDs returned by the API for each push.
+![alt text](image.png)
+![alt text](image-1.png)
 
 ### Performance & Cost
 

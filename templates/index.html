@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taxor — Bill Extraction Model Evaluator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0b0d14;
+            --card-bg: #141724;
+            --card-border: #23283b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --gemini-primary: #38bdf8;
+            --gemini-bg: rgba(56, 189, 248, 0.08);
+            --groq-primary: #f97316;
+            --groq-bg: rgba(249, 115, 22, 0.08);
+            --success-color: #22c55e;
+            --warning-color: #eab308;
+            --danger-color: #ef4444;
+            --accent-glow: rgba(99, 102, 241, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+        }
+
+        header {
+            background: linear-gradient(180deg, rgba(20,23,36,0.9) 0%, rgba(11,13,20,0.9) 100%);
+            border-bottom: 1px solid var(--card-border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: white;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+        }
+
+        .logo-text h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(90deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .mode-badge {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #a7f3d0;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .mode-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        main {
+            flex: 1;
+            padding: 1.5rem 2rem;
+            max-width: 1700px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Controls Section */
+        .controls-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .select-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        select {
+            background: #1e2336;
+            border: 1px solid #2e354f;
+            color: var(--text-main);
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        select:hover {
+            border-color: #475569;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.4);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .toggle-group {
+            display: flex;
+            background: #1e2336;
+            padding: 3px;
+            border-radius: 10px;
+            border: 1px solid #2e354f;
+        }
+
+        .toggle-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-btn.active {
+            background: #334155;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Comparison Container */
+        .workspace {
+            display: grid;
+            grid-template-columns: 350px 1fr 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1200px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Image View Card */
+        .image-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: sticky;
+            top: 5rem;
+        }
+
+        .card-header-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .img-container {
+            width: 100%;
+            height: 480px;
+            background: #090a0f;
+            border-radius: 12px;
+            border: 1px solid #1e2336;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .img-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        /* Model Comparison Cards */
+        .model-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gemini-card {
+            border-top: 3px solid var(--gemini-primary);
+        }
+
+        .groq-card {
+            border-top: 3px solid var(--groq-primary);
+        }
+
+        .model-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid #1e2336;
+            padding-bottom: 1rem;
+        }
+
+        .model-title-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .model-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .gemini-icon {
+            background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+            color: white;
+        }
+
+        .groq-icon {
+            background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+            color: white;
+        }
+
+        .model-name h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .model-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .metrics-row {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .metric-pill {
+            background: #1e2336;
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .metric-val {
+            color: var(--text-main);
+        }
+
+        /* Field Display */
+        .fields-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.85rem;
+        }
+
+        .field-item {
+            background: #171b2a;
+            border: 1px solid #23283c;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .field-item.full-width {
+            grid-column: span 2;
+        }
+
+        .field-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .field-val {
+            font-size: 0.95rem;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .val-null {
+            color: #64748b;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .val-highlight {
+            color: #38bdf8;
+        }
+
+        .amount-highlight {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem;
+            color: #4ade80;
+        }
+
+        /* Line Items Table */
+        .items-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.83rem;
+            background: #11131f;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .items-table th, .items-table td {
+            padding: 0.6rem 0.8rem;
+            text-align: left;
+        }
+
+        .items-table th {
+            background: #1e2336;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .items-table tr:not(:last-child) {
+            border-bottom: 1px solid #1c2033;
+        }
+
+        .items-table td.price-col {
+            text-align: right;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        /* Raw JSON Drawer */
+        details {
+            background: #11131f;
+            border: 1px solid #23283c;
+            border-radius: 8px;
+            padding: 0.5rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-muted);
+            outline: none;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-top: 0.5rem;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #a7f3d0;
+            background: #090a0f;
+            padding: 0.75rem;
+            border-radius: 6px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        /* Spinner Overlay */
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(20, 23, 36, 0.85);
+            backdrop-filter: blur(4px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            border-radius: 16px;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            border-top-color: #6366f1;
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon">T</div>
+            <div class="logo-text">
+                <h1>Taxor</h1>
+                <p>Bill Extraction Evaluator</p>
+            </div>
+        </div>
+        <div class="mode-badge">
+            <div class="mode-dot"></div>
+            <span>Gemini vs Groq Side-by-Side</span>
+        </div>
+    </header>
+
+    <main>
+        <!-- Controls Bar -->
+        <div class="controls-card">
+            <div class="control-group">
+                <span class="select-label">Sample Bills:</span>
+                <select id="sampleSelect" onchange="loadSample(this.value)">
+                    <option value="">Select a sample bill...</option>
+                </select>
+
+                <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    Upload Bill Image
+                </button>
+                <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)">
+            </div>
+
+            <div class="toggle-group">
+                <button class="toggle-btn active" id="btnCached" onclick="setMode('cached')">⚡ Instant Cached</button>
+                <button class="toggle-btn" id="btnLive" onclick="setMode('live')">🔥 Live AI Extract</button>
+            </div>
+        </div>
+
+        <!-- Main Workspace -->
+        <div class="workspace">
+            
+            <!-- Image Card -->
+            <div class="image-card">
+                <div class="card-header-title">
+                    <span>Bill Image</span>
+                    <span id="imgFilename" style="font-size: 0.8rem; color: var(--text-muted);">None</span>
+                </div>
+                <div class="img-container">
+                    <img id="billPreview" src="" alt="Select or upload a bill" style="display: none;">
+                    <div id="imgPlaceholder" style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 2rem;">
+                        Select a sample bill or upload an image to view extractions
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gemini Card -->
+            <div class="model-card gemini-card" id="geminiCard">
+                <div class="loading-overlay" id="geminiLoader">
+                    <div class="spinner"></div>
+                    <span style="font-size: 0.9rem; font-weight: 500;">Extracting with Gemini 2.5 Flash...</span>
+                </div>
+
+                <div class="model-header">
+                    <div class="model-title-badge">
+                        <div class="model-icon gemini-icon">G</div>
+                        <div class="model-name">
+                            <h2>Gemini 2.5 Flash</h2>
+                            <div class="model-sub">Google AI Studio</div>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric-pill">⏱️ <span class="metric-val" id="geminiLatency">0.0s</span></div>
+                        <div class="metric-pill">💵 <span class="metric-val" id="geminiCost">$0.000</span></div>
+                    </div>
+                </div>
+
+                <div class="fields-grid">
+                    <div class="field-item">
+                        <span class="field-label">Vendor Name</span>
+                        <span class="field-val" id="geminiVendor">-</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-label">Invoice Number</span>
+                        <span class="field-val" id="geminiInvoice">-</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-label">Date</span>
+                        <span class="field-val" id="geminiDate">-</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-label">Total Amount</span>
+                        <span class="field-val amount-highlight" id="geminiAmount">-</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-label">Currency</span>
+                        <span class="field-val" id="geminiCurrency">-</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-label">GST Details</span>
+                        <span class="field-val" id="geminiGst">-</span>
+                    </div>
+                </div>
+
+                <div class="items-section">
+                    <span class="field-label">Line Items</span>
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Qty</th>
+                                <th style="text-align: right;">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="geminiItems">
+                            <tr><td colspan="3" class="val-null" style="text-align:center;">No line items extracted</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <details>
+                    <summary>View Raw Model Output</summary>
+                    <pre id="geminiRaw">-</pre>
+                </details>
+            </div>
+
+            <!-- Groq Card -->
+            <div class="model-card groq-card" id="groqCard">
+                <div class="loading-overlay" id="groqLoader">
+                    <div class="spinner"></div>
+                    <span style="font-size: 0.9rem; font-weight: 500;">Extracting with Groq Qwen 3.6...</span>
+                </div>
+
+                <div class="model-header">
+                    <div class="model-title-badge">
+                        <div class="model-icon groq-icon">Q</div>
+                        <div class="model-name">
+                            <h2>Qwen 3.6 27B Vision</h2>
+                            <div class="model-sub">Groq LPU Inference</div>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric-pill">⏱️ <span class="metric-val" id="groqLatency">0.0s</span></div>
+                        <div class="metric-pill">💵 <span class="metric-val" id="groqCost">$0.000</span></div>
+                    </div>
+                </div>
+
+                <div class="fields-grid">
+                    <div class="field-item">
+                        <span class="field-label">Vendor Name</span>
+                        <span class="field-val" id="groqVendor">-</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-label">Invoice Number</span>
+                        <span class="field-val" id="groqInvoice">-</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-label">Date</span>
+                        <span class="field-val" id="groqDate">-</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-label">Total Amount</span>
+                        <span class="field-val amount-highlight" id="groqAmount">-</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-label">Currency</span>
+                        <span class="field-val" id="groqCurrency">-</span>
+                    </div>
+                    <div class="field-item">
+                        <span class="field-label">GST Details</span>
+                        <span class="field-val" id="groqGst">-</span>
+                    </div>
+                </div>
+
+                <div class="items-section">
+                    <span class="field-label">Line Items</span>
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Qty</th>
+                                <th style="text-align: right;">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="groqItems">
+                            <tr><td colspan="3" class="val-null" style="text-align:center;">No line items extracted</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <details>
+                    <summary>View Raw Model Output</summary>
+                    <pre id="groqRaw">-</pre>
+                </details>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        let currentMode = 'cached';
+        let samplesList = [];
+        let currentSampleId = null;
+
+        async function init() {
+            try {
+                const res = await fetch('/api/samples');
+                samplesList = await res.json();
+                const select = document.getElementById('sampleSelect');
+                samplesList.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.id;
+                    opt.textContent = `${s.id} (${s.filename})`;
+                    select.appendChild(opt);
+                });
+
+                if (samplesList.length > 0) {
+                    select.value = samplesList[0].id;
+                    loadSample(samplesList[0].id);
+                }
+            } catch (err) {
+                console.error("Failed to fetch samples:", err);
+            }
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('btnCached').classList.toggle('active', mode === 'cached');
+            document.getElementById('btnLive').classList.toggle('active', mode === 'live');
+            if (currentSampleId) {
+                loadSample(currentSampleId);
+            }
+        }
+
+        async function loadSample(sampleId) {
+            if (!sampleId) return;
+            currentSampleId = sampleId;
+            const sample = samplesList.find(s => s.id === sampleId);
+            if (!sample) return;
+
+            // Show image preview
+            const img = document.getElementById('billPreview');
+            img.src = sample.url;
+            img.style.display = 'block';
+            document.getElementById('imgPlaceholder').style.display = 'none';
+            document.getElementById('imgFilename').textContent = sample.filename;
+
+            if (currentMode === 'cached') {
+                // Load instant pre-computed results
+                const res = await fetch(`/api/compare/${sampleId}`);
+                const data = await res.json();
+                renderModelData('gemini', data.gemini);
+                renderModelData('groq', data.groq);
+            } else {
+                // Trigger live extraction
+                runLiveExtraction({ sample_id: sampleId });
+            }
+        }
+
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Show temporary image preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('billPreview');
+                img.src = e.target.result;
+                img.style.display = 'block';
+                document.getElementById('imgPlaceholder').style.display = 'none';
+                document.getElementById('imgFilename').textContent = file.name;
+            };
+            reader.readAsDataURL(file);
+
+            runLiveExtraction(formData, true);
+        }
+
+        async function runLiveExtraction(payload, isFormData = false) {
+            document.getElementById('geminiLoader').classList.add('show');
+            document.getElementById('groqLoader').classList.add('show');
+
+            try {
+                const options = {
+                    method: 'POST'
+                };
+                if (isFormData) {
+                    options.body = payload;
+                } else {
+                    options.headers = { 'Content-Type': 'application/json' };
+                    options.body = JSON.stringify(payload);
+                }
+
+                const res = await fetch('/api/extract', options);
+                const data = await res.json();
+
+                renderModelData('gemini', data.gemini);
+                renderModelData('groq', data.groq);
+            } catch (err) {
+                console.error("Live extraction error:", err);
+            } finally {
+                document.getElementById('geminiLoader').classList.remove('show');
+                document.getElementById('groqLoader').classList.remove('show');
+            }
+        }
+
+        function renderModelData(prefix, data) {
+            if (!data) {
+                document.getElementById(`${prefix}Vendor`).innerHTML = '<span class="val-null">None</span>';
+                document.getElementById(`${prefix}Invoice`).innerHTML = '<span class="val-null">None</span>';
+                document.getElementById(`${prefix}Date`).innerHTML = '<span class="val-null">None</span>';
+                document.getElementById(`${prefix}Amount`).innerHTML = '<span class="val-null">-</span>';
+                document.getElementById(`${prefix}Currency`).textContent = 'INR';
+                document.getElementById(`${prefix}Gst`).innerHTML = '<span class="val-null">None</span>';
+                document.getElementById(`${prefix}Latency`).textContent = '0.0s';
+                document.getElementById(`${prefix}Cost`).textContent = '$0.000';
+                document.getElementById(`${prefix}Items`).innerHTML = '<tr><td colspan="3" class="val-null" style="text-align:center;">No data</td></tr>';
+                document.getElementById(`${prefix}Raw`).textContent = '-';
+                return;
+            }
+
+            const val = (v) => (v !== null && v !== undefined && v !== "") ? v : '<span class="val-null">null</span>';
+
+            document.getElementById(`${prefix}Vendor`).innerHTML = val(data.vendor_name);
+            document.getElementById(`${prefix}Invoice`).innerHTML = val(data.invoice_number);
+            document.getElementById(`${prefix}Date`).innerHTML = val(data.date);
+            document.getElementById(`${prefix}Amount`).innerHTML = data.amount !== null ? `₹${data.amount}` : '<span class="val-null">null</span>';
+            document.getElementById(`${prefix}Currency`).textContent = data.currency || 'INR';
+            document.getElementById(`${prefix}Gst`).innerHTML = val(data.gst_details);
+
+            document.getElementById(`${prefix}Latency`).textContent = `${data.latency_seconds || 0}s`;
+            document.getElementById(`${prefix}Cost`).textContent = `$${(data.estimated_cost_usd || 0).toFixed(4)}`;
+            document.getElementById(`${prefix}Raw`).textContent = data.raw_model_response || '';
+
+            // Render Line Items
+            const itemsTbody = document.getElementById(`${prefix}Items`);
+            itemsTbody.innerHTML = '';
+
+            const items = data.line_items || [];
+            if (items.length === 0) {
+                itemsTbody.innerHTML = '<tr><td colspan="3" class="val-null" style="text-align:center;">No line items extracted</td></tr>';
+            } else {
+                items.forEach(item => {
+                    const tr = document.createElement('tr');
+                    const name = item.item_name || item.name || '-';
+                    const qty = item.quantity !== null && item.quantity !== undefined ? item.quantity : '-';
+                    const price = item.price !== null && item.price !== undefined ? `₹${item.price}` : '-';
+
+                    tr.innerHTML = `
+                        <td>${name}</td>
+                        <td>${qty}</td>
+                        <td class="price-col">${price}</td>
+                    `;
+                    itemsTbody.appendChild(tr);
+                });
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
