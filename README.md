@@ -1,6 +1,8 @@
 # Taxor — Multi-LLM Bill Extraction Evaluator & Zoho Books Integration
 
-Evaluate Gemini, Claude, and GPT-4o on extracting structured data from handwritten Indian bill/receipt images, score them against ground truth, and push the best model's results into Zoho Books as expenses.
+> 🌐 **Live Web Application:** [https://web-production-b6918.up.railway.app](https://web-production-b6918.up.railway.app/)
+
+Evaluate Gemini, Claude, and Groq on extracting structured data from handwritten Indian bill/receipt images, score them against ground truth, and push the best model's results into Zoho Books as expenses.
 
 ## Setup
 
@@ -76,7 +78,9 @@ python summarize_report.py --report results/report.csv
 
 ## Interactive Web UI
 
-Launch the side-by-side model comparison web interface:
+Try the live hosted web application: **[https://web-production-b6918.up.railway.app](https://web-production-b6918.up.railway.app/)**
+
+Or launch locally:
 ```bash
 python app.py
 ```
