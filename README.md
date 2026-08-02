@@ -139,13 +139,10 @@ I set out to test Gemini, Claude, and Groq on the same 14 bills, but Claude ende
 
 ## Zoho Books Integration 
 
-![Pushed expenses in Zoho Books](docs/zoho_expenses.png)
+Expenses were created via the Zoho Books API using the extraction results from the best-performing model (Gemini). See `results/zoho_push_log.json` for the actual expense IDs returned by the API for each push.
 
-Expenses were created via the Zoho Books API using the extraction results 
-from the best-performing model (Gemini). See `results/zoho_push_log.json` 
-for the actual expense IDs returned by the API for each push.
-![alt text](image.png)
-![alt text](image-1.png)
+![Zoho Books Expenses Screenshot 1](image.png)
+![Zoho Books Expenses Screenshot 2](image-1.png)
 
 ### Performance & Cost
 
