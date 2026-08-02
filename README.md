@@ -90,15 +90,15 @@ python push_sample_expenses.py --provider gemini --count 3
 
 ## Approach
 
-Claude was excluded from the final accuracy comparison due to insufficient API credit — all 14 calls failed at the request level with a billing error before reaching the model, so the 33.7% figure seen in early testing does not reflect actual extraction capability. The pipeline is provider-agnostic and Claude extraction would run identically given API access.
+I set out to test Gemini, Claude, and Groq on the same 14 bills, but Claude ended up excluded from the final numbers. Every Claude call failed with a billing error before it even reached the model — that's an account credit problem, not the model being bad at reading bills. So the 33.7% you might see in an earlier version of this report isn't real; I'm not including it. The code for Claude extraction is still there and works the same way as the others, so if credit gets added later it's a one-line rerun.
 
 ### Challenges
 
-**API access limits.** Anthropic and OpenAI trial credits were exhausted before extraction could run, which is why this evaluation compares Gemini and Groq rather than all three originally planned providers. Rather than delay the submission chasing paid credit for a screening task, I treated this as a scoping decision: ship a correct, honestly-documented two-model comparison instead of a broken three-model one.
+**Ran out of API credit for two providers.** Both Anthropic and OpenAI's trial credits were gone before I could run extraction. Rather than wait around trying to get paid credit sorted for a screening task, I decided to just work with what I had — Gemini and Groq — and be upfront about why the third one is missing instead of quietly leaving in numbers that don't mean anything.
 
-**No access to real shop bills.** I didn't have a ready source of real handwritten bills, so I wrote all 14 myself — across different hotel/restaurant formats (South Indian tiffin centres, dhabas, bakeries, a roadside tea stall, etc.), varying handwriting speed and legibility, pen type, and paper (ruled notebook paper, plain paper, and torn slip paper for the more informal bills). This was a deliberate substitute for sourcing real bills, done to still get genuine variation in handwriting style, paper texture, and bill format/completeness (some bills omit invoice numbers or GST lines entirely, matching how small vendors actually write bills). Because I authored every bill myself, I had exact ground-truth values to score against, with no ambiguity about what the "correct" answer was.
+**Didn't have real handwritten bills lying around.** I don't have easy access to a stack of real shop bills, so I wrote all 14 myself. I tried to make them genuinely different from each other — different hotel/restaurant types (tiffin centres, a dhaba, a bakery, a roadside tea stall), different handwriting speed and neatness, different pens, different paper (ruled notebook pages, plain paper, and a scrappy torn slip for the tea stall one). Some bills skip the invoice number or GST line on purpose, since that's how small vendors actually write bills half the time. Writing them myself also meant I knew the exact correct answer for every field, so there was no guesswork in building the ground truth.
 
-**Parsing failures that looked like accuracy failures.** Groq's initial results scored artificially low (41.8% overall) not because the model misread the bills, but because its raw output wrapped the JSON in a `<think>...</think>` reasoning block that broke naive `json.loads()` parsing, and it used `total_amount` instead of the expected `amount` key. Inspecting `raw_model_response` directly (rather than trusting the scored output) showed Groq had actually extracted every field correctly. After fixing the parser to strip reasoning tags and normalize field names, Groq's real accuracy came out to 85.7% — a good reminder that a low score can mean "bad extraction" or "bad parsing," and it's worth checking the raw model output before drawing conclusions from either.
+**Groq looked bad at first, but it was actually a parsing bug on my end.** Groq's first-run accuracy came out to 41.8%, which looked like a real problem. When I checked the raw model response instead of just trusting the score, I found Groq had actually read every bill correctly — the model just wraps its answer in a `<think>...</think>` reasoning block before the JSON, and my parser was choking on that. It also called the total field `total_amount` instead of `amount`. Once I fixed the parser to strip the reasoning block and normalize field names, Groq's real accuracy came out to 85.7%. Good lesson: a low score can mean the model messed up, or it can mean my code messed up, and you have to check the raw output to know which.
 
 ## Results (14 Sample Indian Bills)
 
@@ -106,26 +106,26 @@ Claude was excluded from the final accuracy comparison due to insufficient API c
 
 | Field | gemini | groq |
 |---|---|---|
-| Vendor Name | 92.9% | 100.0% |
-| Invoice Number | 92.9% | 92.9% |
-| Date | 92.9% | 64.3% |
-| Amount | 92.9% | 92.9% |
-| Currency | 100.0% | 100.0% |
-| GST Details | 100.0% | 71.4% |
-| Line Items | 71.4% | 78.6% |
+| vendor_name | 92.9% | 100.0% |
+| invoice_number | 92.9% | 92.9% |
+| date | 92.9% | 64.3% |
+| amount | 92.9% | 92.9% |
+| currency | 100.0% | 100.0% |
+| gst_details | 100.0% | 71.4% |
+| line_items | 71.4% | 78.6% |
 | **OVERALL** | **91.8%** | **85.7%** |
 
 ### Hallucination Count
 
 | Field | gemini | groq |
 |---|---|---|
-| Vendor Name | 1 | 0 |
-| Invoice Number | 0 | 0 |
-| Date | 0 | 0 |
-| Amount | 0 | 0 |
-| Currency | 0 | 0 |
-| GST Details | 0 | 0 |
-| Line Items | 0 | 0 |
+| vendor_name | 1 | 0 |
+| invoice_number | 0 | 0 |
+| date | 0 | 0 |
+| amount | 0 | 0 |
+| currency | 0 | 0 |
+| gst_details | 0 | 0 |
+| line_items | 0 | 0 |
 
 *Note: Gemini hallucinated a vendor name on a handwritten tea stall bill that did not contain one. Groq correctly returned null.*
 
@@ -138,28 +138,28 @@ Claude was excluded from the final accuracy comparison due to insufficient API c
 
 ## Eval Methodology
 
-Each of the 14 bills was scored per field against a hand-authored `ground_truth.json`, rather than using one blended accuracy score, so failure patterns per field are visible instead of averaged away.
+I scored each field separately against my hand-written `ground_truth.json`, instead of one combined accuracy number, because a single blended score hides exactly where a model is failing.
 
-- **vendor_name, gst_details, line item names** — fuzzy string matching (rapidfuzz), to tolerate minor OCR spelling variation without treating it as a wrong answer
-- **invoice_number, date** — exact match after normalization (whitespace stripped, dates normalized to ISO format) since these fields have no acceptable "close enough"
-- **amount** — numeric match within a ₹1 tolerance, to allow for rounding without masking real extraction errors
+- **vendor_name, gst_details, line item names** — fuzzy match (rapidfuzz), so small spelling variations from OCR don't get marked wrong when they're basically right
+- **invoice_number, date** — exact match after normalizing whitespace and date format, since these need to be exactly right, not close
+- **amount** — matched within ₹1, to allow for rounding without letting real mistakes slip through
 - **currency** — exact match
-- **line_items** — each bill's item list compared against ground truth for count, item name (fuzzy), and per-item amount
+- **line_items** — compared count, item name (fuzzy), and price per item against ground truth
 
-**Hallucination tracking:** where ground truth for a field was `null` (i.e., the bill genuinely didn't contain that information, such as the tea stall bill with no shop name written), the model's output was checked for whether it also returned null. A model returning a fabricated value where none existed on the source bill was logged separately as a hallucination rather than just marked "incorrect" — this distinction matters specifically because this data is destined for accounting software, where an invented vendor name is a materially worse failure than a missing one.
+I also tracked hallucinations separately. If ground truth for a field was null — meaning the bill genuinely didn't have that info, like the tea stall bill with no shop name — I checked whether the model also said null, or made something up instead. A model inventing a vendor name where there wasn't one is a worse failure than just missing a field, especially since this data is going straight into accounting software, so I didn't want that to get buried inside a generic "incorrect" count.
 
-**Cost and latency** were captured per call and extrapolated to a 100-bill run, to make the tradeoff between accuracy, speed, and cost comparable at a realistic operating volume rather than just on this 14-bill sample.
+I also recorded latency and cost per call, then scaled it up to what 100 bills would cost, since accuracy alone doesn't tell the whole story if one model is much slower or pricier at real volume.
 
 ## Recommendation
 
-**Gemini is the better choice for this use case**, despite Groq's respectable 85.7% overall accuracy and lower per-call cost. Three reasons:
+I'd go with Gemini for this.
 
-1. **Reliability on the fields that matter most for bookkeeping.** Gemini scored 92.9% on `date` and 100% on `gst_details` versus Groq's 64.3% and 71.4% — these are exactly the fields an accounting system can't silently get wrong, since a wrong date miscategorizes an expense period and a wrong/missing GST figure has real compliance implications.
+Groq did fine overall — 85.7% isn't bad, and it's cheaper. But it fell down on exactly the fields you can't afford to get wrong in bookkeeping: only 64.3% on date and 71.4% on GST details, against Gemini's 92.9% and 100%. A wrong date puts an expense in the wrong period. A wrong or missing GST figure is a compliance problem, not just a data quality one. That's enough on its own to make the call.
 
-2. **Hallucination behavior slightly favors Groq, but it's a single data point.** Groq correctly returned `null` for the vendor-less tea stall bill, while Gemini invented a name. This is worth flagging and monitoring at scale, but on a sample of 14 it's not enough to outweigh Gemini's much stronger performance on the higher-stakes date/GST fields. If this pattern held up over a larger sample, it would push toward adding an explicit "do not guess — return null if illegible or absent" instruction reinforcement in the prompt for whichever model is used in production, rather than switching models on this basis alone.
+The one place Groq actually did better was on the null case — it correctly said "I don't know" on the bill with no vendor name, while Gemini made one up. That's a real point in Groq's favor and worth taking seriously, but it's one data point out of 14, and it doesn't outweigh Gemini being meaningfully more reliable on the fields that actually matter most. If I saw this hallucination pattern hold up over a bigger sample, my first move would be to just tighten the prompt — tell the model explicitly not to guess — rather than switch models over it.
 
-3. **Latency is a real Groq weakness here.** 26.9s average latency is unusually high for a platform whose main selling point is speed, and is worse than Gemini's 7.1s. Combined with the earlier JSON-parsing fragility (reasoning tokens leaking into output), Groq's pipeline currently needs more defensive engineering around it than Gemini's to be production-safe.
+Groq was also slow — 26.9 seconds average, versus Gemini's 7.1 — and its output needed extra cleanup work just to parse reliably (the `<think>` block issue). That's more fragility to maintain long-term.
 
-**Cost is a secondary factor here** — both providers are inexpensive at this volume ($0.086 vs $0.046 per 100 bills), so the ~$0.04 difference per 100 bills is not large enough to offset a ~6-point accuracy gap on fields with direct compliance/bookkeeping consequences.
+Cost difference between the two is small enough not to matter here — a few cents per 100 bills either way.
 
-**If I were shipping this for real use**, I'd run Gemini as the primary extractor, with Groq (or a second Gemini pass) as a lower-cost secondary check specifically on the `line_items` field, since that's the one field where Groq actually outperformed Gemini (78.6% vs 71.4%) — a lightweight ensemble rather than a single-model decision. I'd also want to re-run this comparison with Claude included once API credit is available, since its actual accuracy remains unverified.
+If I were actually shipping this, I'd use Gemini as the main extractor, and maybe run Groq as a cheap second opinion specifically on line items, since that's the one field it beat Gemini on. I'd also want to redo this whole comparison with Claude once there's actual credit to test it — right now I genuinely don't know how it would perform.
