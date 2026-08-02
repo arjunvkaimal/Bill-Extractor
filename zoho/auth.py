@@ -13,7 +13,7 @@ import requests
 logger = logging.getLogger(__name__)
 
 # Default to US datacenter; change for .in, .eu, .com.au, etc.
-ZOHO_ACCOUNTS_URL = "https://accounts.zoho.com/oauth/v2/token"
+ZOHO_ACCOUNTS_URL = "https://accounts.zoho.in/oauth/v2/token"
 
 
 class ZohoAuthError(Exception):

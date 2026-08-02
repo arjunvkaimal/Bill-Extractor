@@ -13,13 +13,35 @@ from zoho.auth import get_access_token
 logger = logging.getLogger(__name__)
 
 # Default to US datacenter
-ZOHO_BOOKS_BASE_URL = "https://www.zohoapis.com/books/v3"
+ZOHO_BOOKS_BASE_URL = "https://www.zohoapis.in/books/v3"
 
 
 class ZohoExpenseError(Exception):
     """Raised when creating a Zoho Books expense fails."""
     pass
 
+def _get_or_create_vendor(vendor_name: str, access_token: str, org_id: str) -> str | None:
+    headers = {
+        "Authorization": f"Zoho-oauthtoken {access_token}",
+        "X-com-zoho-books-organizationid": org_id,
+        "Content-Type": "application/json",
+    }
+    # 1. Try to find the vendor
+    search_url = f"{ZOHO_BOOKS_BASE_URL}/contacts"
+    resp = requests.get(search_url, params={"contact_name": vendor_name, "contact_type": "vendor"}, headers=headers)
+    if resp.status_code == 200:
+        contacts = resp.json().get("contacts", [])
+        if contacts:
+            return contacts[0]["contact_id"]
+    
+    # 2. If not found, create it
+    payload = {"contact_name": vendor_name, "contact_type": "vendor"}
+    resp = requests.post(search_url, json=payload, headers=headers)
+    if resp.status_code in (200, 201):
+        return resp.json().get("contact", {}).get("contact_id")
+    
+    logger.warning("Failed to create vendor '%s': %s", vendor_name, resp.text)
+    return None
 
 def create_expense(extraction: dict, access_token: str | None = None) -> str:
     """
@@ -80,10 +102,12 @@ def create_expense(extraction: dict, access_token: str | None = None) -> str:
         "currency_code": extraction.get("currency") or "INR",
     }
 
-    # Add vendor_name if present
-    vendor = extraction.get("vendor_name")
-    if vendor:
-        payload["vendor_name"] = vendor
+    # Handle vendor creation/lookup
+    vendor_name = extraction.get("vendor_name")
+    if vendor_name:
+        contact_id = _get_or_create_vendor(vendor_name, access_token, org_id)
+        if contact_id:
+            payload["vendor_id"] = contact_id
 
     url = f"{ZOHO_BOOKS_BASE_URL}/expenses"
     headers = {
