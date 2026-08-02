@@ -2,7 +2,7 @@
 
 > 🌐 **Live Web Application:** [https://web-production-b6918.up.railway.app](https://web-production-b6918.up.railway.app/)
 
-Evaluate Gemini, Claude, and Groq on extracting structured data from handwritten Indian bill/receipt images, score them against ground truth, and push the best model's results into Zoho Books as expenses.
+Evaluate Gemini and Groq on extracting structured data from handwritten Indian bill/receipt images, score them against ground truth, and push the best model's results into Zoho Books as expenses.
 
 ## Setup
 
