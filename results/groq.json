@@ -1,0 +1,364 @@
+{
+  "IMG_4104": {
+    "vendor_name": "SRI KRISHNA BHAVAN",
+    "invoice_number": "0231",
+    "date": "2025-05-14",
+    "amount": 100.0,
+    "currency": "INR",
+    "gst_details": "GST : ₹5 (included)",
+    "raw_model_response": "<think>\nThe user wants me to extract data from a handwritten Indian bill.\n**Vendor Name:** \"SRI KRISHNA BHAVAN\" is clearly written at the top.\n**Invoice Number:** \"Bill No : 0231\" is visible.\n**Date:** \"14/05/2025\" is written. Wait, looking closely at the image, it says \"14/05/2025\" or maybe \"14/08/2025\". The date looks like 2025. Let's assume 2025 based on the visual.\n**Amount:** The total is ₹100.\n**Currency:** INR.\n**GST Details:** \"GST : ₹5 (included)\" is visible.\n**Line Items:**\n1. \"Masala Dosa : 80\"\n2. \"Filter Coffee : 20\"\n\nLet's format this into JSON.\n</think>\n\n```json\n{\n    \"vendor_name\": \"SRI KRISHNA BHAVAN\",\n    \"invoice_number\": \"0231\",\n    \"date\": \"2025-05-14\",\n    \"total_amount\": 100.0,\n    \"currency\": \"INR\",\n    \"gst_details\": \"GST : ₹5 (included)\",\n    \"line_items\": [\n        {\n            \"name\": \"Masala Dosa\",\n            \"quantity\": 1.0,\n            \"price\": 80.0\n        },\n        {\n            \"name\": \"Filter Coffee\",\n            \"quantity\": 1.0,\n            \"price\": 20.0\n        }\n    ]\n}\n```",
+    "latency_seconds": 1.715,
+    "estimated_cost_usd": 0.00035,
+    "line_items": [
+      {
+        "name": "Masala Dosa",
+        "quantity": 1.0,
+        "price": 80.0
+      },
+      {
+        "name": "Filter Coffee",
+        "quantity": 1.0,
+        "price": 20.0
+      }
+    ]
+  },
+  "IMG_4105": {
+    "vendor_name": "UDUPI RESTAURANT",
+    "invoice_number": null,
+    "date": "2025-06-15",
+    "amount": 130.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "<think>\nThe user wants the data from the receipt extracted into a JSON object.\n\n1.  **vendor_name**: \"UDUPI RESTAURANT\"\n2.  **invoice_number**: Not found.\n3.  **date**: \"15-06-2025\" -> Need to convert to 2025-06-15.\n4.  **amount**: 130.0\n5.  **currency**: \"INR\" (Default for India, and context implies Indian currency).\n6.  **gst_details**: Not found.\n7.  **line_items**:\n    *   \"Masala Dosa\", 90\n    *   \"Sambhar Extra\", 15\n    *   \"Filter Coffee\", 25\n    *   \"Sweets\" (No price listed next to it, but it's an item. Wait, looking closer at the bottom, \"Sweets\" is written but has no price next to it. However, the total is 130. 90+15+25 = 130. So \"Sweets\" might be a category header or an item with 0 price, or just a note. Since it's listed separately at the bottom without a price, I will include it but leave price null, or perhaps it's just a note. Actually, looking at the layout, \"Sweets\" is at the very bottom. The total 130 accounts for the first three items exactly. I will include the first three items with prices. I will include \"Sweets\" as a line item with null price/quantity if I can, but the prompt asks for item_name, quantity, price. Since \"Sweets\" has no price, it's safer to include the clear items. Wait, looking at the first image, \"Sweets\" is just written at the bottom. It doesn't have a price. I will list the items with prices.\n    *   Item 1: Masala Dosa, 90\n    *   Item 2: Sambhar Extra, 15\n    *   Item 3: Filter Coffee, 25\n\nLet's construct the JSON.\n</think>\n\n```json\n{\n    \"vendor_name\": \"UDUPI RESTAURANT\",\n    \"invoice_number\": null,\n    \"date\": \"2025-06-15\",\n    \"amount\": 130.0,\n    \"currency\": \"INR\",\n    \"gst_details\": null,\n    \"line_items\": [\n        {\n            \"item_name\": \"Masala Dosa\",\n            \"quantity\": null,\n            \"price\": 90.0\n        },\n        {\n            \"item_name\": \"Sambhar Extra\",\n            \"quantity\": null,\n            \"price\": 15.0\n        },\n        {\n            \"item_name\": \"Filter Coffee\",\n            \"quantity\": null,\n            \"price\": 25.0\n        }\n    ]\n}\n```",
+    "latency_seconds": 5.669,
+    "estimated_cost_usd": 0.000493,
+    "line_items": [
+      {
+        "item_name": "Masala Dosa",
+        "quantity": null,
+        "price": 90.0
+      },
+      {
+        "item_name": "Sambhar Extra",
+        "quantity": null,
+        "price": 15.0
+      },
+      {
+        "item_name": "Filter Coffee",
+        "quantity": null,
+        "price": 25.0
+      }
+    ]
+  },
+  "IMG_4106": {
+    "vendor_name": "Annapurna Sweets",
+    "invoice_number": "A-265",
+    "date": "2025-06-20",
+    "amount": 420.0,
+    "currency": "INR",
+    "gst_details": "GST@5%",
+    "raw_model_response": "JSON_PARSE_ERROR: \n<think>\nThe user wants me to extract information from a handwritten receipt.\n\n1.  **Vendor Name**: I see \"Annapurna Sweets\" written at the top in cursive. There is also \"[CHAI POINT CORNER] in block letters at the bottom. I will use the top one as the primary vendor.\n2.  **Invoice Number**: \"Bill No: A-265\". So, \"A-265\".\n3.  **Date**: \"Date: 20/06/2025\". This is DD/MM/YYYY format. I need to convert to YYYY-MM-DD. So, \"2025-06-20\".\n4.  **Amount**: The bottom shows \"Net: 420\". The total before tax is 400. The net payable is 420.\n5.  **Currency**: The receipt uses the Rupee symbol (₹) implicitly or explicitly (looks like ₹ before 400). Default is INR.\n6.  **GST Details**: \"GST@5%\". There is no GSTIN number visible. I will just extract the rate \"GST@5%\".\n7.  **Line Items**:\n    *   Item 1: \"Kaju Katti (250g)\" - Price: 220. Quantity isn't explicitly a number like '1', but the weight is 250g. I'll put 1 as quantity or null, but the prompt asks for quantity as float. Usually, if it's a weight, quantity might be 1. Let's look closer. It's just the item name with weight. I will assume quantity 1 or null. The prompt asks for quantity. I'll leave it null or maybe 1. Let's look at the price. Price is 220.\n    *   Item 2: \"Gulab Jamun (500g)\" - Price: 180.\n\nLet's refine the quantity. It doesn't explicitly say \"1 kg\" or similar. It lists the unit \"250g\". It's likely 1 unit of 250g. I'll set quantity to null as it's not a distinct count. Wait, looking at the layout: \"Kaju Katti (250g) ... 220\". This implies the price 220 is for that 250g pack.\nItem 1: Name \"Kaju Katti\", Quantity null, Price 220.\nItem 2: Name \"Gulab Jamun\", Quantity null, Price 180.\nWait, let's look at the total. 220 + 180 = 400. Correct.\nThen \"GST@50/0\". Wait, it looks like \"GST@5%\". Let's check the math. 5% of 400 is 20. The GST amount is listed as 20. So it is 5%.\nNet: 420. Correct.\n\nSo, the JSON structure:\n- vendor_name: \"Annapurna Sweets\"\n- invoice_number: \"A-265\"\n- date: \"2025-06-20\"\n- amount: 420.0\n- currency: \"INR\"\n- gst_details: \"GST@5%\"\n- line_items:\n  - {item_name: \"Kaju Katti\", quantity: null, price: 220.0} -> actually, maybe I should include the weight in the name? \"Kaju Katti (250g)\". Yes.\n  - {item_name: \"Gulab Jamun\", quantity: null, price: 180.0} -> \"Gulab Jamun (500g)\".\n\nLet's re-read the vendor name. \"Annapurna Sweets\".\nThe bottom text \"[CHAI POINT CORNER]\" might be the outlet name.\nI will use \"Annapurna Sweets\" as the vendor name.\n\nLet's check the date again. \"20/06/2025\".\nWait, looking closer at the date... is it 20/06/2025? Yes. Or 20/05? The loop looks like a 6. 2025.\n\nLet's check the GST line. \"GST@5%\". The symbol looks like a percent sign or 50/0 (five percent). It's likely 5%.\n\nLet's construct the JSON.\n</think>\n\n```json\n{\n  \"vendor_name\": \"Annapurna Sweets\",\n  \"invoice_number\": \"A-265\",\n  \"date\":",
+    "latency_seconds": 28.67,
+    "estimated_cost_usd": 0.000558,
+    "line_items": [
+      {
+        "item_name": "Kaju Katti (250g)",
+        "quantity": null,
+        "price": 220.0
+      },
+      {
+        "item_name": "Gulab Jamun (500g)",
+        "quantity": null,
+        "price": 180.0
+      }
+    ]
+  },
+  "IMG_4107": {
+    "vendor_name": "chai point corner",
+    "invoice_number": null,
+    "date": null,
+    "amount": 50.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "<think>\nThe user wants me to extract information from a handwritten bill image and return it as a JSON object.\n\n1.  **Analyze the image:**\n    *   The image shows a handwritten note on white paper.\n    *   **Header:** \"CHAI POINT Corner\". This looks like the vendor name.\n    *   **Line Items:**\n        *   \"Chai X 2\" -> Item: Chai, Quantity: 2. Price is not explicitly listed per item, but I can try to infer or leave null if not clear. Wait, looking closely, there's no unit price next to \"Chai X 2\".\n        *   \"Samosa X 2\" -> Item: Samosa, Quantity: 2. Again, no unit price listed.\n    *   **Total:** \"Total : 50\". This is the grand total.\n    *   **Date:** I don't see any date written on the paper.\n    *   **Invoice Number:** None visible.\n    *   **GST Details:** None visible.\n\n2.  **Construct the JSON:**\n    *   `vendor_name`: \"CHAI POINT Corner\"\n    *   `invoice_number`: null\n    *   `date`: null\n    *   `amount`: 50.0\n    *   `currency`: \"INR\" (Default for Indian context, implied by \"Chai\" and \"Samosa\" and typical pricing).\n    *   `gst_details`: null\n    *   `line_items`:\n        *   Item 1: \"Chai\", quantity: 2, price: null (since individual prices aren't written, only the total is).\n        *   Item 2: \"Samosa\", quantity: 2, price: null.\n\n3.  **Refine JSON values:**\n    *   The prompt asks for `price` as float or null. Since individual prices aren't there, I will set it to null.\n    *   The prompt asks for `quantity` as float or null. \"X 2\" clearly means quantity 2.\n\n4.  **Final JSON Structure:**\n    ```json\n    {\n      \"vendor_name\": \"CHAI POINT Corner\",\n      \"invoice_number\": null,\n      \"date\": null,\n      \"amount\": 50.0,\n      \"currency\": \"INR\",\n      \"gst_details\": null,\n      \"line_items\": [\n        {\n          \"item_name\": \"Chai\",\n          \"quantity\": 2.0,\n          \"price\": null\n        },\n        {\n          \"item_name\": \"Samosa\",\n          \"quantity\": 2.0,\n          \"price\": null\n        }\n      ]\n    }\n    ```\n</think>\n\n```json\n{\n    \"vendor_name\": \"chai point corner\",\n    \"invoice_number\": null,\n    \"date\": null,\n    \"amount\": 50.0,\n    \"currency\": \"INR\",\n    \"gst_details\": null,\n    \"line_items\": [\n        {\n            \"item_name\": \"Chai\",\n            \"quantity\": 2.0,\n            \"price\": null\n        },\n        {\n            \"item_name\": \"Samosa\",\n            \"quantity\": 2.0,\n            \"price\": null\n        }\n    ]\n}\n```",
+    "latency_seconds": 30.549,
+    "estimated_cost_usd": 0.000415,
+    "line_items": [
+      {
+        "item_name": "Chai",
+        "quantity": 2.0,
+        "price": null
+      },
+      {
+        "item_name": "Samosa",
+        "quantity": 2.0,
+        "price": null
+      }
+    ]
+  },
+  "IMG_4108": {
+    "vendor_name": "Old Delhi Sweets",
+    "invoice_number": null,
+    "date": "2025-10-18",
+    "amount": 180.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "<think>\nThe user wants the data from the receipt extracted into a specific JSON format.\n\n1.  **Vendor Name:** The top line clearly says \"Old Delhi Sweets\".\n2.  **Date:** The date is written as \"18/10/2025\". I need to convert this to YYYY-MM-DD format: \"2025-10-18\".\n3.  **Amount:** The total at the bottom is \"Rs 180\".\n4.  **Currency:** \"Rs\" indicates INR.\n5.  **GST Details:** None visible.\n6.  **Line Items:**\n    *   \"Jalebi (250g)\" - Price: 90. Quantity isn't explicitly a separate number, but implied 1 item. I will parse the text \"Jalebi (250g)\" as the name.\n    *   \"Samosa\" - Price: 40.\n    *   \"Lassi\" - Price: 50.\n\nLet's construct the JSON.\n</think>\n\n```json\n{\n  \"vendor_name\": \"Old Delhi Sweets\",\n  \"invoice_number\": null,\n  \"date\": \"2025-10-18\",\n  \"amount\": 180.0,\n  \"currency\": \"INR\",\n  \"gst_details\": null,\n  \"line_items\": [\n    {\n      \"item_name\": \"Jalebi (250g)\",\n      \"quantity\": null,\n      \"price\": 90.0\n    },\n    {\n      \"item_name\": \"Samosa\",\n      \"quantity\": null,\n      \"price\": 40.0\n    },\n    {\n      \"item_name\": \"Lassi\",\n      \"quantity\": null,\n      \"price\": 50.0\n    }\n  ]\n}\n```",
+    "latency_seconds": 29.573,
+    "estimated_cost_usd": 0.000357,
+    "line_items": [
+      {
+        "item_name": "Jalebi (250g)",
+        "quantity": null,
+        "price": 90.0
+      },
+      {
+        "item_name": "Samosa",
+        "quantity": null,
+        "price": 40.0
+      },
+      {
+        "item_name": "Lassi",
+        "quantity": null,
+        "price": 50.0
+      }
+    ]
+  },
+  "IMG_4109": {
+    "vendor_name": "Bombay Fast Food",
+    "invoice_number": null,
+    "date": "2025-07-14",
+    "amount": 126.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "<think>\nThe user wants me to extract data from a handwritten bill image.\n\n**1. Analyze the image:**\n- The image shows a handwritten bill on a piece of paper.\n- The top part is cut off in some crops, but the main body is visible.\n- Text visible:\n    - \"Bombay Fast Food\" (Vendor Name)\n    - \"Date: 14/07/2025\"\n    - \"Bill No:\" (Value is cut off or not clearly visible, just the label \"Bill No:\")\n    - \"Vada Pau x2 40\" (Line item: Vada Pau, quantity 2, price 40)\n    - \"Pav Bhaji 80\" (Line item: Pav Bhaji, quantity 1 (implied), price 80)\n    - \"Total 120\"\n    - \"GST : 6\"\n    - \"Net : 126\"\n\n**2. Extract fields:**\n- `vendor_name`: \"Bombay Fast Food\"\n- `invoice_number`: The label \"Bill No:\" is there, but the number itself is not visible next to it. So, `null`.\n- `date`: \"14/07/2025\". Format is DD/MM/YYYY. Converted to ISO: \"2025-07-14\".\n- `amount`: The \"Net\" amount is 126. The \"Total\" before tax is 120. The prompt asks for \"grand total / final payable amount\". That would be the Net amount: 126.\n- `currency`: \"INR\" (implied by the Rupee symbol ₹ visible in the close-up crops).\n- `gst_details`: \"6\" is written next to GST. No GSTIN is visible. So just \"6\" or null? The prompt says \"any GST/GSTIN info\". I will put \"6\" or just leave it. Actually, looking at the prompt \"gst_details\": \"<any GST/GSTIN info as a string, or null>\". It's safer to just capture the text related to GST. Let's look for a GSTIN. None found. Just \"GST : 6\". I will probably just put \"6\" or leave it as the tax amount isn't a GSTIN. Wait, the prompt asks for GST details. Usually, that implies a number like a GSTIN. Since there isn't one, but there is a GST amount, I'll stick to `null` for GST details as it usually refers to the ID, or maybe just put the label. Let's look at the rules: \"any GST/GSTIN info\". The text says \"GST : 6\". I'll extract that string or just `null` if strictly looking for a GSTIN. Given it's a handwritten bill, a GSTIN is unlikely to be present. I will set it to `null` to be safe, or perhaps include the label if I feel generous. Let's stick to `null` as no valid identifier is present, just an amount. Actually, looking at the field definition \"gst_details\", usually, this is for the ID. I'll set it to `null`.\n- `line_items`:\n    - Item 1: \"Vada Pau\", quantity \"2\" (written as x2), price \"40\".\n    - Item 2: \"Pav Bhaji\", quantity null (implied 1), price \"80\".\n\n**3. Construct JSON:**\n```json\n{\n  \"vendor_name\": \"Bombay Fast Food\",\n  \"invoice_number\": null,\n  \"date\": \"2025-07-14\",\n  \"amount\": 126.0,\n  \"currency\": \"INR\",\n  \"gst_details\": null,\n  \"line_items\": [\n    {\n      \"item_name\": \"Vada Pau\",\n      \"quantity\": 2.0,\n      \"price\": 40.0\n    },\n    {\n      \"item_name\": \"Pav Bhaji\",\n      \"quantity\": null,\n      \"price\": 80.0\n    }\n  ]\n}\n```\nWait, looking closer at the \"Bill No\" section. It's on the right. It just says \"Bill No:\" and nothing follows.\nDate is \"14/07/2025\".\nTotal is 120.\nGST is 6.\nNet is 126.\nThe currency symbol ₹ is visible in the total and net lines (e.g., ₹126).\n\nRefining line items:\n- \"Vada Pau x2 40\": Name \"Vada Pau\", Quantity 2, Price",
+    "latency_seconds": 31.329,
+    "estimated_cost_usd": 0.000558,
+    "line_items": [
+      {
+        "item_name": "Vada Pau",
+        "quantity": 2.0,
+        "price": 40.0
+      },
+      {
+        "item_name": "Pav Bhaji",
+        "quantity": null,
+        "price": 80.0
+      }
+    ]
+  },
+  "IMG_4110": {
+    "vendor_name": "Rajadhani Thali House",
+    "invoice_number": null,
+    "date": "2025-06-22",
+    "amount": 560.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "<think>\nThe user wants the data from the receipt extracted into a JSON object.\n\n1.  **Vendor Name:** The top line reads \"Rajadhani Thali House\".\n2.  **Date:** The date is written as \"22-06-2025\". Converted to ISO format: \"2025-06-22\".\n3.  **Amount:** The total is written as \"RS. 560\".\n4.  **Currency:** \"INR\" (implied by RS.).\n5.  **GST Details:** None visible.\n6.  **Line Items:**\n    *   \"Veg Thali x 2\" -> Price: 500.\n    *   \"Buttermilk\" -> Price: 40.\n    *   \"Papad x 2\" -> Price: 20.\n\nConstructing the JSON.\n</think>\n\n```json\n{\n  \"vendor_name\": \"Rajadhani Thali House\",\n  \"invoice_number\": null,\n  \"date\": \"2025-06-22\",\n  \"amount\": 560.0,\n  \"currency\": \"INR\",\n  \"gst_details\": null,\n  \"line_items\": [\n    {\n      \"item_name\": \"Veg Thali\",\n      \"quantity\": 2.0,\n      \"price\": 500.0\n    },\n    {\n      \"item_name\": \"Buttermilk\",\n      \"quantity\": null,\n      \"price\": 40.0\n    },\n    {\n      \"item_name\": \"Papad\",\n      \"quantity\": 2.0,\n      \"price\": 20.0\n    }\n  ]\n}\n```",
+    "latency_seconds": 29.472,
+    "estimated_cost_usd": 0.000353,
+    "line_items": [
+      {
+        "item_name": "Veg Thali",
+        "quantity": 2.0,
+        "price": 500.0
+      },
+      {
+        "item_name": "Buttermilk",
+        "quantity": null,
+        "price": 40.0
+      },
+      {
+        "item_name": "Papad",
+        "quantity": 2.0,
+        "price": 20.0
+      }
+    ]
+  },
+  "IMG_4111": {
+    "vendor_name": "Punjabi Dhaba",
+    "invoice_number": "88",
+    "date": "2025-06-11",
+    "amount": 378.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "JSON_PARSE_ERROR: \n<think>\nThe user wants me to extract information from the provided image of a handwritten receipt and format it as a JSON object.\n\n**1. Identify the fields:**\n*   `vendor_name`: Found at the top: \"Punjabi Dhaba\".\n*   `invoice_number`: Found on the right side: \"Bill No: 88\". So, \"88\".\n*   `date`: Found on the left: \"Date: 11/06/2025\". Format: YYYY-MM-DD -> \"2025-06-11\".\n*   `amount`: Found at the bottom: \"Grand Total : 378\".\n*   `currency`: The symbol is ₹, implying INR.\n*   `gst_details`: Not present.\n*   `line_items`:\n    *   \"Dal Makhani\": 140.\n    *   \"Roti\": 60. (Handwriting looks like \"Roti\" or \"Ati\", contextually \"Roti\"). Let's stick with \"Roti\".\n    *   \"Paneer Sabzi\": 160.\n\n**2. Format the data:**\n*   Construct the JSON object.\n\n```json\n{\n  \"vendor_name\": \"Punjabi Dhaba\",\n  \"invoice_number\": \"88\",\n  \"date\": \"2025-06-11\",\n  \"amount\": 378.0,\n  \"currency\": \"INR\",\n  \"gst_details\": null,\n  \"line_items\": [\n    {\n      \"item_name\": \"Dal Makhani\",\n      \"quantity\": null,\n      \"price\": 140.0\n    },\n    {\n      \"item_name\": \"Roti\",\n      \"quantity\": null,\n      \"price\": 60.0\n    },\n    {\n      \"item_name\": \"Paneer Sabzi\",\n      \"quantity\": null,\n      \"price\": 160.0\n    }\n  ]\n}\n```\n\n**3. Final check:**\n*   \"Dal Makhani\" -> 140 (price)\n*   \"Ati\" -> looks like \"Roti\" -> 160\n*   \"Paneer Sabzi\" -> 160 (price)\n*   Total: 378\n*   Grand Total: 378\n\nWait, let me look closer at the second item. It looks like \"Ati\" or \"Roti\". Given it's a dhaba, it is 99% likely \"Roti\". I will use \"Roti\".\n\nLet me look closer at the third item. \"Paneer Sabzi\" -> 160.\nWait, wait. The second item says \"Ati\" or \"Roti\", price 60.\nThird item \"Paneer Sabzi\" price 160.\n\nTotal Calculation: 140 + 60 + 160 = 360.\nThe receipt lists \"Total: 360\", \"CGST: 9\", \"SGST: 9\", \"Grand Total: 378\".\nSo the amount is 378.\n\nLet's refine the JSON.\n\n```json\n{\n  \"vendor_name\": \"Punjabi Dhaba\",\n  \"invoice_number\": \"88\",\n  \"date\": \"2025-06-11\",\n  \"amount\": 378.0,\n  \"currency\": \"INR\",\n  \"gst_details\": null,\n  \"line_items\": [\n    {\n      \"item_name\": \"Dal Makhani\",\n      \"quantity\": null,\n      \"price\": 140.0\n    },\n    {\n      \"item_name\": \"Roti\",\n      \"quantity\": null,\n      \"price\": 60.0\n    },\n    {\n      \"item_name\": \"Paneer Sabzi\",\n      \"quantity\": null,\n      \"price\": 160.0\n    }\n  ]\n}\n```\nWait, looking again at the handwriting for second item: \"A...ti\". Looks like \"Roti\" written sloppily or \"Aati\" ? No, \"Roti\" is standard. I will stick with \"Roti\". Let me re-examine. It looks like \"Roti\".\n\nWait, looking at the third item. \"Pancer Sabzi\" or \"Paneer Sabzi\"? It looks like \"Paneer Sabzi\" but written a bit loosely. \"Pancee Sabzi\" maybe? No, definitely",
+    "latency_seconds": 31.263,
+    "estimated_cost_usd": 0.000466,
+    "line_items": [
+      {
+        "item_name": "Dal Makhani",
+        "quantity": null,
+        "price": 140.0
+      },
+      {
+        "item_name": "Roti",
+        "quantity": null,
+        "price": 60.0
+      },
+      {
+        "item_name": "Paneer Sabzi",
+        "quantity": null,
+        "price": 160.0
+      }
+    ]
+  },
+  "IMG_4112": {
+    "vendor_name": "Kwaliry Baken",
+    "invoice_number": "3391",
+    "date": "2025-06-27",
+    "amount": 219.0,
+    "currency": "INR",
+    "gst_details": "10.25",
+    "raw_model_response": "JSON_PARSE_ERROR: \n<think>\nThe user wants me to extract information from a handwritten receipt.\n\n**1. Analyze the input image:**\n- **Vendor Name:** \"Kwaliry Baken\" (Looks like \"Kwaliry Bakers\" but cut off at the end. Let's look closer. Actually, it looks like \"Kwaliry Baken\"). No, wait, the bottom part of 'Baken' is cut off in the second image, but the first image clearly shows \"Kwaliry Bakers\" or \"Kwaliry Baken\". The 's' is barely visible or maybe it's just 'Baken'. Looking at the full first image, it says \"Kwaliry Baken\" or \"Bakers\". Let's assume \"Kwaliry Bakers\" or \"Kwaliry Baken\". The 's' is missing or hard to read. Let's transcribe what is visible: \"Kwaliry Baken\" or \"Kwaliry Bakery\". Wait, looking at the cursive, it looks like \"Kwaliry Baken\". Let's stick to what is clearly written. The second word starts with B-a-k-e-n. It looks like \"Baken\" or \"Bakers\" with a very faint 's'. Let's go with \"Kwaliry Baken\". Actually, looking at the first image, it's \"Kwaliry Baken\" then maybe a cut off 's'. But let's look at the third image. It's cut off. Let's look at the second one. \"Kwaliry Bak...\". Let's assume it's \"Kwaliry Baken\" or \"Kwaliry Bakers\". Given the context of \"Bread\", \"Veg Puff\", \"Cake\", it's a bakery. I will transcribe it as \"Kwaliry Baken\" based on the visible letters, but \"Kwaliry Bakers\" is likely the intended name. The prompt asks for `<string>`. I will write \"Kwaliry Baken\". Actually, looking closer at the top image, it looks like \"Kwaliry Bakery\" or \"Bakers\". The last letter is ambiguous. Let's look at the text again. \"Kwaliry Baken\". Let's assume \"Kwaliry Baken\". Wait, re-reading the first image. The last word looks like \"Baken\". Let's try \"Kwaliry Baken\".\n\n- **Date:** \"27/06/2025\". Wait, that year is in the future? It looks like \"2025\". Or maybe \"2023\"? The last digit is a '5'. It looks very much like '2025'. Let's assume the date is 2025. Or is it '2015'? The '1' looks like a '2'. No, looking really closely, it's \"2025\". The '5' is distinct. Let's use 2025. Format: YYYY-MM-DD -> 2025-06-27.\n\n- **Bill Number:** \"3391\". Written as \"Bill No: 3391\".\n\n- **Line Items:**\n    - \"Bread loaf\": 45\n    - \"Veg Puff x 3\": 90\n    - \"Pineapple Cake 87ta\" (Looks like '87ta' or '88ta' or '3/4'?). Let's look closer. It looks like \"87ca\" or \"88ca\" or maybe \"3/4\". Wait, \"Pineapple Cake 3/4\"? No, the price is 74. The text says \"Pineapple Cake 3/4\" or \"Pineapple Cake slice\"? No, it looks like \"Pineapple Cake 87ta\". Wait, looking at the price column.\n        - Bread loaf: 45.\n        - Veg Puff x 3: 90.\n        - Pineapple Cake ... price is 74.\n        - Total: 205 (crossed out) 219.\n        - GST: 10.25.\n        - So Total should be 208.75? Or is 219 the final total? 45 + 90 + 74 = 209.\n        - Wait, 45 + 90 = 135. 135 + 74 = 209.\n        - The total written is \"205\" crossed out and \"219\".\n        - Wait, 205 + 10.25 = 215.25.\n        - Maybe the items are different.\n        - Let's re-read the items",
+    "latency_seconds": 31.53,
+    "estimated_cost_usd": 0.000466,
+    "line_items": [
+      {
+        "item_name": "Bread loaf",
+        "quantity": null,
+        "price": 45.0
+      },
+      {
+        "item_name": "Veg Puff",
+        "quantity": 3.0,
+        "price": 90.0
+      },
+      {
+        "item_name": "Pineapple Cake",
+        "quantity": null,
+        "price": 74.0
+      }
+    ]
+  },
+  "IMG_4113": {
+    "vendor_name": "Ganesh Tiffin House",
+    "invoice_number": null,
+    "date": "2025-06-30",
+    "amount": 145.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "JSON_PARSE_ERROR: \n<think>\nThe user wants me to extract information from a handwritten bill.\n\n**1. Analyze the input:**\n- The input is an image containing a handwritten receipt/bill.\n- The text is handwritten in blue ink on white paper.\n- I need to extract specific fields: `vendor_name`, `invoice_number`, `date`, `amount`, `currency`, `gst_details`, and `line_items`.\n\n**2. Scan the image for text:**\n- **Header:** \"Ganesh Tiffin House\" (visible at the top).\n- **Date:** \"Date : 30/06/2025\" (visible below the header). Note: The year looks like 2025.\n- **Line Items:**\n    - \"Poha\" followed by \"60\".\n    - \"Upma\" followed by \"55\".\n    - \"Tea x 2\" followed by \"30\".\n- **Total:** \"Total : 145\".\n\n**3. Map to JSON fields:**\n- `vendor_name`: \"Ganesh Tiffin House\"\n- `invoice_number`: Not found.\n- `date`: \"30/06/2025\". Needs ISO format: \"2025-06-30\".\n- `amount`: 145.0\n- `currency`: \"INR\" (default for Indian context).\n- `gst_details`: Not found.\n- `line_items`:\n    - Item 1: \"Poha\", quantity: null (implied 1), price: 60.0\n    - Item 2: \"Upma\", quantity: null (implied 1), price: 55.0\n    - Item 3: \"Tea\", quantity: 2.0 (explicitly \"x 2\"), price: 30.0. Or I can list \"Tea x 2\" as name and 30 as price. The prompt asks for `item_name`, `quantity`, `price`. \"Tea x 2\" suggests quantity 2, price total 30. Or price 15 each. The list has \"30\" next to \"Tea x 2\". Let's assume quantity 2, price 30 (total for that line item). Or quantity null, price 30 if I treat \"Tea x 2\" as the name. Let's look at the other items. Poha 60, Upma 55. These look like single items. Tea x 2 30 implies 30 for 2 teas. I will extract:\n        - Name: \"Poha\", Quantity: null, Price: 60.0\n        - Name: \"Upma\", Quantity: null, Price: 55.0\n        - Name: \"Tea\", Quantity: 2.0, Price: 30.0 (interpreting \"Tea x 2\" as item Tea, qty 2). Or Name \"Tea x 2\", Quantity null, Price 30. Let's stick to parsing the text as written. \"Tea x 2\" is the text. I'll put \"Tea x 2\" as name or separate. Let's separate for clarity if possible, but the prompt says \"extract all listed dishes\".\n        - Let's look at the price column.\n            - Poha : 60\n            - Upma : 55\n            - Tea x 2 : 30\n            - Total : 145\n        - Wait, 60 + 55 + 30 = 145. Yes, the math checks out.\n        - So for Tea, quantity is 2, total price is 30. I will output quantity 2.0 and price 30.0.\n\n**4. Final JSON Construction:**\n- `vendor_name`: \"Ganesh Tiffin House\"\n- `invoice_number`: null\n- `date`: \"2025-06-30\"\n- `amount`: 145.0\n- `currency`: \"INR\"\n- `gst_details`: null\n- `line_items`:\n    - {\"item_name\": \"Poha\", \"quantity\": null, \"price\": 60.0}\n    - {\"item_name\": \"Upma\", \"quantity\": null, \"price\": 55.0}\n    - {\"item_name\": \"Tea\", \"quantity\": 2.0, \"price\": 30.0}\n\nLet's refine the date. It looks like 30/06/2025.\nLet's refine the line items.\n- Poha: 6",
+    "latency_seconds": 34.276,
+    "estimated_cost_usd": 0.000558,
+    "line_items": [
+      {
+        "item_name": "Poha",
+        "quantity": null,
+        "price": 60.0
+      },
+      {
+        "item_name": "Upma",
+        "quantity": null,
+        "price": 55.0
+      },
+      {
+        "item_name": "Tea",
+        "quantity": 2.0,
+        "price": 30.0
+      }
+    ]
+  },
+  "IMG_4114": {
+    "vendor_name": "Al-Ameen Biryani House",
+    "invoice_number": "AB-056",
+    "date": "2025-07-02",
+    "amount": 283.5,
+    "currency": "INR",
+    "gst_details": "CGST : 2.5% : 26.75, SGST : 2.5% : 26.75",
+    "raw_model_response": "<think>\nThe user wants the data from the receipt extracted into a JSON object.\n\n1.  **Vendor Name:** \"Al-Ameen Biryani House\" is clearly written at the top.\n2.  **Invoice Number:** \"Bill No: AB-056\" is visible.\n3.  **Date:** \"02/07/2025\" is written. This needs to be converted to YYYY-MM-DD format: \"2025-07-02\".\n4.  **Line Items:**\n    *   \"Chicken Biryani (Full)\" - Price: 220\n    *   \"Raita\" - Price: 30\n    *   \"Mineral Water\" - Price: 20\n5.  **Amount:** The \"Grand Total\" is \"283.50\".\n6.  **GST Details:** \"CGST : 2.5% : 26.75\" and \"SGST : 2.5% : 26.75\". I will combine these into a string.\n7.  **Currency:** The symbol used is '₹', which corresponds to INR.\n\nConstructing the JSON.\n</think>\n\n{\n  \"vendor_name\": \"Al-Ameen Biryani House\",\n  \"invoice_number\": \"AB-056\",\n  \"date\": \"2025-07-02\",\n  \"amount\": 283.50,\n  \"currency\": \"INR\",\n  \"gst_details\": \"CGST : 2.5% : 26.75, SGST : 2.5% : 26.75\",\n  \"line_items\": [\n    {\n      \"item_name\": \"Chicken Biryani (Full)\",\n      \"quantity\": null,\n      \"price\": 220\n    },\n    {\n      \"item_name\": \"Raita\",\n      \"quantity\": null,\n      \"price\": 30\n    },\n    {\n      \"item_name\": \"Mineral Water\",\n      \"quantity\": null,\n      \"price\": 20\n    }\n  ]\n}",
+    "latency_seconds": 31.532,
+    "estimated_cost_usd": 0.000461,
+    "line_items": [
+      {
+        "item_name": "Chicken Biryani (Full)",
+        "quantity": null,
+        "price": 220
+      },
+      {
+        "item_name": "Raita",
+        "quantity": null,
+        "price": 30
+      },
+      {
+        "item_name": "Mineral Water",
+        "quantity": null,
+        "price": 20
+      }
+    ]
+  },
+  "IMG_4115": {
+    "vendor_name": "Modlen Restaurant",
+    "invoice_number": "9012",
+    "date": "2025-04-07",
+    "amount": 218,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "<think>\nThe user wants the data from the bill extracted into a specific JSON format.\n\n1.  **Vendor Name:** \"Modlen Restaurant\" (Top of the bill).\n2.  **Invoice Number:** \"9012\" (Next to \"Bill No:\").\n3.  **Date:** \"07/04/2025\" (Next to \"Date:\"). Convert to ISO format: 2025-04-07.\n4.  **Amount:** 218 (Next to \"Total\" and the summation symbol).\n5.  **Currency:** INR (Default for Indian bills, symbol IS isn't explicitly there but context implies it).\n6.  **GST Details:** None visible.\n7.  **Line Items:**\n    *   \"Chapati (4)\" -> quantity 4, price 48. (48/4 = 12 per chapati, but I should output total price for the line item usually, or just extract what is written. The prompt asks for quantity and price. I will extract quantity as 4 and price as 48).\n    *   \"Mix Veg sabzi\" -> quantity null (implied 1), price 90.\n    *   \"Pal Piy\" -> quantity null, price 80.\n\nLet's refine the extraction:\n- Vendor: \"Modlen Restaurant\"\n- Invoice: \"9012\"\n- Date: \"2025-04-07\"\n- Amount: 218.0\n- Currency: \"INR\"\n- GST: null\n- Line Items:\n  - Item 1: \"Chapati\", quantity: 4.0, price: 48.0\n  - Item 2: \"Mix Veg sabzi\", quantity: null, price: 90.0\n  - Item 3: \"Pal Piy\", quantity: null, price: 80.0\n</think>\n\n{\n  \"vendor_name\": \"Modlen Restaurant\",\n  \"invoice_number\": \"9012\",\n  \"date\": \"2025-04-07\",\n  \"amount\": 218,\n  \"currency\": \"INR\",\n  \"gst_details\": null,\n  \"line_items\": [\n    {\n      \"item_name\": \"Chapati\",\n      \"quantity\": 4.0,\n      \"price\": 48.0\n    },\n    {\n      \"item_name\": \"Mix veg sabzi\",\n      \"quantity\": null,\n      \"price\": 90.0\n    },\n    {\n      \"item_name\": \"Pal Piy\",\n      \"quantity\": null,\n      \"price\": 80.0\n    }\n  ]\n}",
+    "latency_seconds": 30.106,
+    "estimated_cost_usd": 0.000485,
+    "line_items": [
+      {
+        "item_name": "Chapati",
+        "quantity": 4.0,
+        "price": 48.0
+      },
+      {
+        "item_name": "Mix veg sabzi",
+        "quantity": null,
+        "price": 90.0
+      },
+      {
+        "item_name": "Pal Piy",
+        "quantity": null,
+        "price": 80.0
+      }
+    ]
+  },
+  "IMG_4116": {
+    "vendor_name": "Hotel Sagar",
+    "invoice_number": null,
+    "date": "2025-07-10",
+    "amount": 140.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "<think>\nThe user wants the data from the handwritten receipt extracted into a specific JSON format.\n\n1.  **Vendor Name:** \"Hotel Sagar\" is clearly written at the top.\n2.  **Invoice Number:** Not visible.\n3.  **Date:** \"Dat: 10-07-2025\" is visible. I need to convert this to ISO format: 2025-07-10.\n4.  **Amount:** The \"Total\" is 140.\n5.  **Currency:** Default to INR.\n6.  **GST Details:** None visible.\n7.  **Line Items:**\n    *   \"Rava Dosa : 100\" (Quantity not explicitly stated, assume 1 for price calculation, but the prompt asks for quantity. It's just \"Rava Dosa\". Let's look closer. It says \"Rava Dosa : 100\". No quantity specified, so quantity is null or 1. The prompt says \"float quantity or null\". I will put null as it's not explicitly written like the next item. Wait, actually, usually these are singles. But strictly, only \"Filter Coffee\" has a \"(2)\". I will set Rava Dosa quantity to null).\n    *   \"Filter Coffee (2) : 40\". Item: \"Filter Coffee\", Quantity: 2, Price: 40. (Note: 40 is likely the total for the two coffees, i.e., 20 each, or the price listed is the line total. The prompt asks for \"price\". Usually, this implies the line total shown next to the item. I will extract 40 as the price shown).\n\nLet's refine the line items:\n- Item: \"Rava Dosa\", Quantity: null (or 1 implied), Price: 100.\n- Item: \"Filter Coffee\", Quantity: 2.0, Price: 40.0.\n\nWait, looking at \"Filter Coffee (2) : 40\". It implies 2 cups for 40 total.\nThe prompt asks for `quantity` and `price`.\nFor Rava Dosa, it just says \"100\".\nFor Filter Coffee, it says \"(2) : 40\".\n\nI will extract:\n- \"Rava Dosa\", quantity: null, price: 100.0\n- \"Filter Coffee\", quantity: 2.0, price: 40.0\n\nFinal JSON construction.\n</think>\n\n{\n  \"vendor_name\": \"Hotel Sagar\",\n  \"invoice_number\": null,\n  \"date\": \"2025-07-10\",\n  \"amount\": 140.0,\n  \"currency\": \"INR\",\n  \"gst_details\": null,\n  \"line_items\": [\n    {\n      \"item_name\": \"Rava Dosa\",\n      \"quantity\": null,\n      \"price\": 100.0\n    },\n    {\n      \"item_name\": \"Filter Coffee\",\n      \"quantity\": 2.0,\n      \"price\": 40.0\n    }\n  ]\n}",
+    "latency_seconds": 29.878,
+    "estimated_cost_usd": 0.000408,
+    "line_items": [
+      {
+        "item_name": "Rava Dosa",
+        "quantity": null,
+        "price": 100.0
+      },
+      {
+        "item_name": "Filter Coffee",
+        "quantity": 2.0,
+        "price": 40.0
+      }
+    ]
+  },
+  "IMG_4117": {
+    "vendor_name": null,
+    "invoice_number": null,
+    "date": null,
+    "amount": 25.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "JSON_PARSE_ERROR: \n<think>\nThe user wants me to extract data from a handwritten receipt image.\n\n**1. Analyze the Image:**\n- The image shows a handwritten note on a white piece of paper.\n- The text is written in blue ink.\n- I can see three lines of text clearly:\n    - \"Chex - 15\" (Wait, looking closer, it looks like \"Chai\" or \"Chew\"? Let's look at the context. Below it says \"Biscuit - 10\". \"Chai\" makes sense with \"Biscuit\". Let's re-examine the first line. It looks like \"Chew\" or \"Chair\". Given the context of \"Biscuit\", \"Chai\" (tea) is highly probable. However, the handwriting looks like \"Chew\" or \"Chair\". Let's look at the third line \"Total - 25\". 15 + 10 = 25. This math holds up. The first item is spelled \"Chex\" or \"Chew\". Actually, looking at the strokes, it's C-h-e-w. Or C-h-i. The 'i' might have a dot that is faint or it's a 'u'. Wait, let's look at the third crop. It shows \"Chew\". No, looking at the first main crop, it looks like \"Chew\". Let's assume \"Chai\" because Chai + Biscuit is a common combo. But wait, looking at the letter after h, it looks like 'e'. \"Che...\". Maybe \"Chem\"? No. Let's look really closely at the first word. C-h-e-w? Or maybe \"Chair\"? No. \"Chai\" is the most logical interpretation for a bill with biscuits, but I must transcribe what is written. It looks like \"Chew\". Or \"Chex\". Let's look at the stroke again. C-h-e-w. Or maybe \"Chai\" written messily. Let's look at the third crop again. It ends in \"wi\". That looks like \"Chi\" or \"Chw\". Wait, looking at the very bottom crop, it shows \"Chew\". No, that's just \"Cheu\" or \"Chew\". Let's assume it's \"Chai\" but written poorly? Or maybe \"Chex\"? No. Let's look at the provided text in the prompt's example or similar tasks. Usually, these are food items. \"Chai\" is 15, \"Biscuit\" is 10. This is a classic Indian combo. Even if it looks like \"Chew\", I will transcribe it as \"Chai\" because that's the semantic meaning, or stick to the visual \"Chew\". Let's look really closely at the first crop. \"C-h-e-w\". It really looks like \"Chew\". But \"Chai\" is the standard word. Let's look at the third crop. It says \"wi\". So the word ends in 'i'. \"Chi\"? \"Chai\"? The loop suggests 'e'. \"Che...\". Maybe \"Chem\"? No. Let's go with \"Chai\" but acknowledge the handwriting is ambiguous. Actually, looking at the very first crop, the word is \"Chai\". The 'a' looks a bit like an 'e' and the 'i' is just a vertical line. Let's assume \"Chai\".\n    - \"Biscuit - 10\"\n    - \"Total - 25\"\n\n- There is faint pencil writing in the background: \"T... RAJARAT... 19000\". This looks like a pre-printed or penciled-in template or previous writing. It's not part of the main ink receipt.\n- There is no vendor name visible in ink.\n- There is no invoice number.\n- There is no date.\n- The total amount is 25.\n\n**2. Extract Fields:**\n- **vendor_name**: Not visible. The faint writing \"RAJARAT...\" is likely just noise or back-bleed. I will set to null.\n- **invoice_number**: Not found.\n- **date**: Not found.\n- **amount**: 25.0 (Total is 25).\n- **currency**: \"INR\" (Default).\n- **gst_details**: Not found.\n- **line_items**:\n    - Item 1: \"Chai\" (or \"Chew\"? I will go with \"Chai\" as it's the most logical food item paired with biscuits, even though the handwriting is messy. Wait, looking at the third crop again, the word cuts off at \"wi\". This strongly implies \"Biscui\" or similar? No, the third crop is the bottom of the paper. The first crop is the top. The third crop shows \"Chew\" or \"Chi\".",
+    "latency_seconds": 30.465,
+    "estimated_cost_usd": 0.000558,
+    "line_items": [
+      {
+        "item_name": "Chai",
+        "quantity": null,
+        "price": 15.0
+      },
+      {
+        "item_name": "Biscuit",
+        "quantity": null,
+        "price": 10.0
+      }
+    ]
+  }
+}

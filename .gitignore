@@ -15,8 +15,6 @@ build/
 *.egg
 
 # Project-specific
-images/
-results/
 
 # IDE
 .vscode/

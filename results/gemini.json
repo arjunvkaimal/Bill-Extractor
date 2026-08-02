@@ -1,0 +1,364 @@
+{
+  "IMG_4104": {
+    "vendor_name": "SRI KRISHNA BHAVAN",
+    "invoice_number": "0231",
+    "date": "2025-03-14",
+    "amount": 100.0,
+    "currency": "INR",
+    "gst_details": "GST: ₹ 5 (included)",
+    "raw_model_response": "{\n  \"vendor_name\": \"SRI KRISHNA BHAVAN\",\n  \"invoice_number\": \"0231\",\n  \"date\": \"2025-03-14\",\n  \"amount\": 100.0,\n  \"currency\": \"INR\",\n  \"gst_details\": \"GST: ₹ 5 (included)\",\n  \"line_items\": [\n    {\n      \"item_name\": \"Masala Dosa\",\n      \"quantity\": null,\n      \"price\": 80.0\n    },\n    {\n      \"item_name\": \"Filter Coffee\",\n      \"quantity\": null,\n      \"price\": 20.0\n    }\n  ]\n}",
+    "latency_seconds": 4.682,
+    "estimated_cost_usd": 0.000829,
+    "line_items": [
+      {
+        "item_name": "Masala Dosa",
+        "quantity": null,
+        "price": 80.0
+      },
+      {
+        "item_name": "Filter Coffee",
+        "quantity": null,
+        "price": 20.0
+      }
+    ]
+  },
+  "IMG_4105": {
+    "vendor_name": "UDUPI RESTAURANT",
+    "invoice_number": null,
+    "date": "2025-06-15",
+    "amount": 130.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "{\n  \"vendor_name\": \"UDUPI RESTAURANT\",\n  \"invoice_number\": null,\n  \"date\": \"2025-06-15\",\n  \"amount\": 130.0,\n  \"currency\": \"INR\",\n  \"gst_details\": null,\n  \"line_items\": [\n    {\n      \"item_name\": \"Masala Dosa\",\n      \"quantity\": null,\n      \"price\": 90.0\n    },\n    {\n      \"item_name\": \"Sambhar Extra\",\n      \"quantity\": null,\n      \"price\": 15.0\n    },\n    {\n      \"item_name\": \"Filter Coffee\",\n      \"quantity\": null,\n      \"price\": 25.0\n    }\n  ]\n}",
+    "latency_seconds": 6.678,
+    "estimated_cost_usd": 0.000875,
+    "line_items": [
+      {
+        "item_name": "Masala Dosa",
+        "quantity": null,
+        "price": 90.0
+      },
+      {
+        "item_name": "Sambhar Extra",
+        "quantity": null,
+        "price": 15.0
+      },
+      {
+        "item_name": "Filter Coffee",
+        "quantity": null,
+        "price": 25.0
+      }
+    ]
+  },
+  "IMG_4106": {
+    "vendor_name": "Annapurna Sweets",
+    "invoice_number": "A-245",
+    "date": "2025-06-20",
+    "amount": 420.0,
+    "currency": "INR",
+    "gst_details": "GST@5% : 20",
+    "raw_model_response": "{\n  \"vendor_name\": \"Annapurna Sweets\",\n  \"invoice_number\": \"A-245\",\n  \"date\": \"2025-06-20\",\n  \"amount\": 420.0,\n  \"currency\": \"INR\",\n  \"gst_details\": \"GST@5% : 20\",\n  \"line_items\": [\n    {\n      \"item_name\": \"Kaju Katli (250g)\",\n      \"quantity\": null,\n      \"price\": 220.0\n    },\n    {\n      \"item_name\": \"Gulab Jamun (500g)\",\n      \"quantity\": null,\n      \"price\": 180.0\n    }\n  ]\n}",
+    "latency_seconds": 8.404,
+    "estimated_cost_usd": 0.000852,
+    "line_items": [
+      {
+        "item_name": "Kaju Katli (250g)",
+        "quantity": null,
+        "price": 220.0
+      },
+      {
+        "item_name": "Gulab Jamun (500g)",
+        "quantity": null,
+        "price": 180.0
+      }
+    ]
+  },
+  "IMG_4107": {
+    "vendor_name": "CHAI POINT Corner",
+    "invoice_number": null,
+    "date": null,
+    "amount": 50.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "{\n  \"vendor_name\": \"CHAI POINT Corner\",\n  \"invoice_number\": null,\n  \"date\": null,\n  \"amount\": 50.0,\n  \"currency\": \"INR\",\n  \"gst_details\": null,\n  \"line_items\": [\n    {\n      \"item_name\": \"Chai\",\n      \"quantity\": 2.0,\n      \"price\": null\n    },\n    {\n      \"item_name\": \"Samosa\",\n      \"quantity\": 2.0,\n      \"price\": null\n    }\n  ]\n}",
+    "latency_seconds": 5.337,
+    "estimated_cost_usd": 0.000747,
+    "line_items": [
+      {
+        "item_name": "Chai",
+        "quantity": 2.0,
+        "price": null
+      },
+      {
+        "item_name": "Samosa",
+        "quantity": 2.0,
+        "price": null
+      }
+    ]
+  },
+  "IMG_4108": {
+    "vendor_name": "Old Delhi Sweets",
+    "invoice_number": null,
+    "date": "2025-07-18",
+    "amount": 180.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "{\n  \"vendor_name\": \"Old Delhi Sweets\",\n  \"invoice_number\": null,\n  \"date\": \"2025-07-18\",\n  \"amount\": 180.0,\n  \"currency\": \"INR\",\n  \"gst_details\": null,\n  \"line_items\": [\n    {\n      \"item_name\": \"Jalebi (250g)\",\n      \"quantity\": null,\n      \"price\": 90.0\n    },\n    {\n      \"item_name\": \"Samosa\",\n      \"quantity\": 2.0,\n      \"price\": 40.0\n    },\n    {\n      \"item_name\": \"Lassi\",\n      \"quantity\": null,\n      \"price\": 50.0\n    }\n  ]\n}",
+    "latency_seconds": 7.758,
+    "estimated_cost_usd": 0.000897,
+    "line_items": [
+      {
+        "item_name": "Jalebi (250g)",
+        "quantity": null,
+        "price": 90.0
+      },
+      {
+        "item_name": "Samosa",
+        "quantity": 2.0,
+        "price": 40.0
+      },
+      {
+        "item_name": "Lassi",
+        "quantity": null,
+        "price": 50.0
+      }
+    ]
+  },
+  "IMG_4109": {
+    "vendor_name": "Bombay Fast Food",
+    "invoice_number": null,
+    "date": "2025-07-14",
+    "amount": 126.0,
+    "currency": "INR",
+    "gst_details": "GST: ₹6",
+    "raw_model_response": "{\n  \"vendor_name\": \"Bombay Fast Food\",\n  \"invoice_number\": null,\n  \"date\": \"2025-07-14\",\n  \"amount\": 126.0,\n  \"currency\": \"INR\",\n  \"gst_details\": \"GST: ₹6\",\n  \"line_items\": [\n    {\n      \"item_name\": \"Vada Pao\",\n      \"quantity\": 2.0,\n      \"price\": 40.0\n    },\n    {\n      \"item_name\": \"Pav Bhaji\",\n      \"quantity\": 1.0,\n      \"price\": 80.0\n    }\n  ]\n}",
+    "latency_seconds": 10.473,
+    "estimated_cost_usd": 0.000818,
+    "line_items": [
+      {
+        "item_name": "Vada Pao",
+        "quantity": 2.0,
+        "price": 40.0
+      },
+      {
+        "item_name": "Pav Bhaji",
+        "quantity": 1.0,
+        "price": 80.0
+      }
+    ]
+  },
+  "IMG_4110": {
+    "vendor_name": "Rajadhani Thali House",
+    "invoice_number": null,
+    "date": "2025-06-22",
+    "amount": 560.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "{\n  \"vendor_name\": \"Rajadhani Thali House\",\n  \"invoice_number\": null,\n  \"date\": \"2025-06-22\",\n  \"amount\": 560.0,\n  \"currency\": \"INR\",\n  \"gst_details\": null,\n  \"line_items\": [\n    {\n      \"item_name\": \"Veg Thali\",\n      \"quantity\": 2.0,\n      \"price\": 500.0\n    },\n    {\n      \"item_name\": \"Buttermilk\",\n      \"quantity\": null,\n      \"price\": 40.0\n    },\n    {\n      \"item_name\": \"Papad\",\n      \"quantity\": 2.0,\n      \"price\": 20.0\n    }\n  ]\n}",
+    "latency_seconds": 8.134,
+    "estimated_cost_usd": 0.000893,
+    "line_items": [
+      {
+        "item_name": "Veg Thali",
+        "quantity": 2.0,
+        "price": 500.0
+      },
+      {
+        "item_name": "Buttermilk",
+        "quantity": null,
+        "price": 40.0
+      },
+      {
+        "item_name": "Papad",
+        "quantity": 2.0,
+        "price": 20.0
+      }
+    ]
+  },
+  "IMG_4111": {
+    "vendor_name": "Punjabi Dhaba",
+    "invoice_number": "88",
+    "date": "2025-06-11",
+    "amount": 378.0,
+    "currency": "INR",
+    "gst_details": "CGST: ₹9, SGST: ₹9",
+    "raw_model_response": "{\n  \"vendor_name\": \"Punjabi Dhaba\",\n  \"invoice_number\": \"88\",\n  \"date\": \"2025-06-11\",\n  \"amount\": 378.0,\n  \"currency\": \"INR\",\n  \"gst_details\": \"CGST: ₹9, SGST: ₹9\",\n  \"line_items\": [\n    {\n      \"item_name\": \"Dal Makhani\",\n      \"quantity\": null,\n      \"price\": 140.0\n    },\n    {\n      \"item_name\": \"Roti\",\n      \"quantity\": null,\n      \"price\": 60.0\n    },\n    {\n      \"item_name\": \"Paneer Sabzi\",\n      \"quantity\": null,\n      \"price\": 160.0\n    }\n  ]\n}",
+    "latency_seconds": 7.626,
+    "estimated_cost_usd": 0.000917,
+    "line_items": [
+      {
+        "item_name": "Dal Makhani",
+        "quantity": null,
+        "price": 140.0
+      },
+      {
+        "item_name": "Roti",
+        "quantity": null,
+        "price": 60.0
+      },
+      {
+        "item_name": "Paneer Sabzi",
+        "quantity": null,
+        "price": 160.0
+      }
+    ]
+  },
+  "IMG_4112": {
+    "vendor_name": "Kwality Bakers",
+    "invoice_number": "3391",
+    "date": "2025-06-27",
+    "amount": 214.0,
+    "currency": "INR",
+    "gst_details": "GST: 10.25",
+    "raw_model_response": "{\n  \"vendor_name\": \"Kwality Bakers\",\n  \"invoice_number\": \"3391\",\n  \"date\": \"2025-06-27\",\n  \"amount\": 214.0,\n  \"currency\": \"INR\",\n  \"gst_details\": \"GST: 10.25\",\n  \"line_items\": [\n    {\n      \"item_name\": \"Bread Loaf\",\n      \"quantity\": 1.0,\n      \"price\": 45.0\n    },\n    {\n      \"item_name\": \"Veg Puff\",\n      \"quantity\": 3.0,\n      \"price\": 30.0\n    },\n    {\n      \"item_name\": \"Pineapple Cake Slice\",\n      \"quantity\": 1.0,\n      \"price\": 79.0\n    }\n  ]\n}",
+    "latency_seconds": 6.654,
+    "estimated_cost_usd": 0.000929,
+    "line_items": [
+      {
+        "item_name": "Bread Loaf",
+        "quantity": 1.0,
+        "price": 45.0
+      },
+      {
+        "item_name": "Veg Puff",
+        "quantity": 3.0,
+        "price": 30.0
+      },
+      {
+        "item_name": "Pineapple Cake Slice",
+        "quantity": 1.0,
+        "price": 79.0
+      }
+    ]
+  },
+  "IMG_4113": {
+    "vendor_name": "Ganesh Tiffin House",
+    "invoice_number": null,
+    "date": "2025-06-30",
+    "amount": 145.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "{\n  \"vendor_name\": \"Ganesh Tiffin House\",\n  \"invoice_number\": null,\n  \"date\": \"2025-06-30\",\n  \"amount\": 145.0,\n  \"currency\": \"INR\",\n  \"gst_details\": null,\n  \"line_items\": [\n    {\n      \"item_name\": \"Poha\",\n      \"quantity\": 1.0,\n      \"price\": 60.0\n    },\n    {\n      \"item_name\": \"Upma\",\n      \"quantity\": 1.0,\n      \"price\": 55.0\n    },\n    {\n      \"item_name\": \"Tea\",\n      \"quantity\": 2.0,\n      \"price\": 30.0\n    }\n  ]\n}",
+    "latency_seconds": 6.77,
+    "estimated_cost_usd": 0.00089,
+    "line_items": [
+      {
+        "item_name": "Poha",
+        "quantity": 1.0,
+        "price": 60.0
+      },
+      {
+        "item_name": "Upma",
+        "quantity": 1.0,
+        "price": 55.0
+      },
+      {
+        "item_name": "Tea",
+        "quantity": 2.0,
+        "price": 30.0
+      }
+    ]
+  },
+  "IMG_4114": {
+    "vendor_name": "Al-Ameen Biryani House",
+    "invoice_number": "AB-056",
+    "date": "2025-01-02",
+    "amount": 283.5,
+    "currency": "INR",
+    "gst_details": "CGST: 2.5% (6.75), SGST: 2.5% (6.75)",
+    "raw_model_response": "{\n  \"vendor_name\": \"Al-Ameen Biryani House\",\n  \"invoice_number\": \"AB-056\",\n  \"date\": \"2025-01-02\",\n  \"amount\": 283.50,\n  \"currency\": \"INR\",\n  \"gst_details\": \"CGST: 2.5% (6.75), SGST: 2.5% (6.75)\",\n  \"line_items\": [\n    {\n      \"item_name\": \"Chicken Biryani (Full)\",\n      \"quantity\": null,\n      \"price\": 220.0\n    },\n    {\n      \"item_name\": \"Raita\",\n      \"quantity\": null,\n      \"price\": 30.0\n    },\n    {\n      \"item_name\": \"Mineral Water\",\n      \"quantity\": null,\n      \"price\": 20.0\n    }\n  ]\n}",
+    "latency_seconds": 6.989,
+    "estimated_cost_usd": 0.00097,
+    "line_items": [
+      {
+        "item_name": "Chicken Biryani (Full)",
+        "quantity": null,
+        "price": 220.0
+      },
+      {
+        "item_name": "Raita",
+        "quantity": null,
+        "price": 30.0
+      },
+      {
+        "item_name": "Mineral Water",
+        "quantity": null,
+        "price": 20.0
+      }
+    ]
+  },
+  "IMG_4115": {
+    "vendor_name": "Modern Restaurant",
+    "invoice_number": "9012",
+    "date": "2025-07-07",
+    "amount": 218.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "{\n  \"vendor_name\": \"Modern Restaurant\",\n  \"invoice_number\": \"9012\",\n  \"date\": \"2025-07-07\",\n  \"amount\": 218.0,\n  \"currency\": \"INR\",\n  \"gst_details\": null,\n  \"line_items\": [\n    {\n      \"item_name\": \"Chapati\",\n      \"quantity\": 4.0,\n      \"price\": 48.0\n    },\n    {\n      \"item_name\": \"Mix Veg sabzi\",\n      \"quantity\": null,\n      \"price\": 90.0\n    },\n    {\n      \"item_name\": \"Dal Fry\",\n      \"quantity\": null,\n      \"price\": 80.0\n    }\n  ]\n}",
+    "latency_seconds": 5.637,
+    "estimated_cost_usd": 0.000891,
+    "line_items": [
+      {
+        "item_name": "Chapati",
+        "quantity": 4.0,
+        "price": 48.0
+      },
+      {
+        "item_name": "Mix Veg sabzi",
+        "quantity": null,
+        "price": 90.0
+      },
+      {
+        "item_name": "Dal Fry",
+        "quantity": null,
+        "price": 80.0
+      }
+    ]
+  },
+  "IMG_4116": {
+    "vendor_name": "Hotel Sagar",
+    "invoice_number": null,
+    "date": "2025-07-10",
+    "amount": 140.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "{\n  \"vendor_name\": \"Hotel Sagar\",\n  \"invoice_number\": null,\n  \"date\": \"2025-07-10\",\n  \"amount\": 140.0,\n  \"currency\": \"INR\",\n  \"gst_details\": null,\n  \"line_items\": [\n    {\n      \"item_name\": \"Rawa Dosa\",\n      \"quantity\": null,\n      \"price\": 100.0\n    },\n    {\n      \"item_name\": \"Filter coffee\",\n      \"quantity\": 2.0,\n      \"price\": 40.0\n    }\n  ]\n}",
+    "latency_seconds": 6.405,
+    "estimated_cost_usd": 0.000797,
+    "line_items": [
+      {
+        "item_name": "Rawa Dosa",
+        "quantity": null,
+        "price": 100.0
+      },
+      {
+        "item_name": "Filter coffee",
+        "quantity": 2.0,
+        "price": 40.0
+      }
+    ]
+  },
+  "IMG_4117": {
+    "vendor_name": "Udupi Restaurant",
+    "invoice_number": null,
+    "date": null,
+    "amount": 25.0,
+    "currency": "INR",
+    "gst_details": null,
+    "raw_model_response": "{\n  \"vendor_name\": \"Udupi Restaurant\",\n  \"invoice_number\": null,\n  \"date\": null,\n  \"amount\": 25.0,\n  \"currency\": \"INR\",\n  \"gst_details\": null,\n  \"line_items\": [\n    {\n      \"item_name\": \"Chai\",\n      \"quantity\": null,\n      \"price\": 15.0\n    },\n    {\n      \"item_name\": \"Biscuit\",\n      \"quantity\": null,\n      \"price\": 10.0\n    }\n  ]\n}",
+    "latency_seconds": 8.152,
+    "estimated_cost_usd": 0.00075,
+    "line_items": [
+      {
+        "item_name": "Chai",
+        "quantity": null,
+        "price": 15.0
+      },
+      {
+        "item_name": "Biscuit",
+        "quantity": null,
+        "price": 10.0
+      }
+    ]
+  }
+}
