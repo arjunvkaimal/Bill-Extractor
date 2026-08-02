@@ -45,6 +45,7 @@ def extract_bill(image_path: str) -> dict:
         "amount": None,
         "currency": "INR",
         "gst_details": None,
+        "line_items": [],
         "raw_model_response": "",
         "latency_seconds": 0.0,
         "estimated_cost_usd": 0.0,
@@ -70,7 +71,7 @@ def extract_bill(image_path: str) -> dict:
         start = time.perf_counter()
         response = client.chat.completions.create(
             model=_MODEL,
-            max_tokens=1024,
+            max_tokens=4096,
             messages=[
                 {
                     "role": "user",
@@ -103,20 +104,34 @@ def extract_bill(image_path: str) -> dict:
             output_tokens = response.usage.completion_tokens or 0
         result["estimated_cost_usd"] = round(_estimate_cost(input_tokens, output_tokens), 6)
 
-        # Strip markdown fences if present
-        json_text = raw_text.strip()
-        json_text = re.sub(r'^```(?:json)?\s*', '', json_text)
-        json_text = re.sub(r'\s*```$', '', json_text)
+        # Strip <think> blocks
+        json_text = re.sub(r'<think>.*?</think>', '', raw_text, flags=re.DOTALL)
+        
+        # Extract everything from the first '{' to the last '}'
+        match = re.search(r'(\{.*\})', json_text, flags=re.DOTALL)
+        if match:
+            json_text = match.group(1)
+        else:
+            json_text = json_text.strip()
+            json_text = re.sub(r'^```(?:json)?\s*', '', json_text)
+            json_text = re.sub(r'\s*```$', '', json_text)
 
         # Parse JSON from model response
         parsed = json.loads(json_text)
-        for field in ("vendor_name", "invoice_number", "date", "amount", "currency", "gst_details"):
+        
+        # Normalize field names
+        if "total_amount" in parsed and "amount" not in parsed:
+            parsed["amount"] = parsed.pop("total_amount")
+        if "total" in parsed and "amount" not in parsed:
+            parsed["amount"] = parsed.pop("total")
+            
+        for field in ("vendor_name", "invoice_number", "date", "amount", "currency", "gst_details", "line_items"):
             if field in parsed:
                 result[field] = parsed[field]
 
     except json.JSONDecodeError as e:
         logger.error("Groq returned non-JSON for %s: %s", image_path, e)
-        result["raw_model_response"] = f"JSON_PARSE_ERROR: {result['raw_model_response']}"
+        result["raw_model_response"] = f"JSON_PARSE_ERROR ({e}): {result['raw_model_response']}"
     except Exception as e:
         logger.error("Groq extraction failed for %s: %s", image_path, e)
         result["raw_model_response"] = f"ERROR: {type(e).__name__}: {e}"

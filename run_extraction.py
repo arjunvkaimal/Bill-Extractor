@@ -114,6 +114,7 @@ def run_provider(provider_name: str, extract_fn, images: list[Path]) -> dict:
 # Providers that need rate limiting (free tier limits)
 _RATE_LIMITED_PROVIDERS = {
     "gemini": 13,  # 5 req/min → 1 every 12s, use 13s for safety
+    "groq": 30,    # 8000 TPM limit
 }
 
 

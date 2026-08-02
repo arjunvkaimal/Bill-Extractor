@@ -80,9 +80,9 @@ def score_field(field: str, pred_val, truth_val, fuzzy_threshold: int = 80) -> d
 
     # One null, other not → incorrect
     if pred_is_null and not truth_is_null:
-        return {"correct": False, "details": f"predicted null, expected '{truth_val}'"}
+        return {"correct": False, "hallucination": False, "details": f"predicted null, expected '{truth_val}'"}
     if not pred_is_null and truth_is_null:
-        return {"correct": False, "details": f"predicted '{pred_val}', expected null"}
+        return {"correct": False, "hallucination": True, "details": f"predicted '{pred_val}', expected null"}
 
     # --- Field-specific scoring ---
 
@@ -130,6 +130,9 @@ def score_field(field: str, pred_val, truth_val, fuzzy_threshold: int = 80) -> d
         
         if not truth_val and not pred_val:
             return {"correct": True, "details": "both empty"}
+            
+        if not truth_val and pred_val:
+            return {"correct": False, "hallucination": True, "details": "predicted line items, expected empty"}
             
         correct_count = 0
         for t_item in truth_val:
@@ -185,7 +188,7 @@ def score_provider(provider_results: dict, ground_truth: dict, fuzzy_threshold: 
         }
     """
     per_bill = {}
-    field_counts = {f: {"correct": 0, "total": 0} for f in SCORED_FIELDS}
+    field_counts = {f: {"correct": 0, "total": 0, "hallucination": 0} for f in SCORED_FIELDS}
     total_correct = 0
     total_fields = 0
     latencies = []
@@ -214,6 +217,8 @@ def score_provider(provider_results: dict, ground_truth: dict, fuzzy_threshold: 
             if scores[f]["correct"]:
                 field_counts[f]["correct"] += 1
                 total_correct += 1
+            if scores[f].get("hallucination", False):
+                field_counts[f]["hallucination"] += 1
 
     per_field = {}
     for f in SCORED_FIELDS:
@@ -223,6 +228,7 @@ def score_provider(provider_results: dict, ground_truth: dict, fuzzy_threshold: 
             "correct": correct,
             "total": total,
             "accuracy": (correct / total * 100) if total > 0 else 0.0,
+            "hallucination": field_counts[f]["hallucination"],
         }
 
     num_bills = len(ground_truth)
@@ -267,8 +273,8 @@ def generate_report(
 
     results_path = Path(results_dir)
     provider_files = sorted(results_path.glob("*.json"))
-    # Exclude report files
-    provider_files = [p for p in provider_files if p.stem not in ("report",)]
+    # Exclude report and claude files
+    provider_files = [p for p in provider_files if p.stem not in ("report", "claude")]
 
     if not provider_files:
         logger.error("No provider result files found in %s", results_dir)
@@ -289,7 +295,7 @@ def generate_report(
     csv_file = out_path / "report.csv"
     with open(csv_file, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow(["provider", "field", "correct", "total", "accuracy_%"])
+        writer.writerow(["provider", "field", "correct", "total", "accuracy_%", "hallucination_count"])
 
         for provider, scores in sorted(all_scores.items()):
             for field in SCORED_FIELDS:
@@ -298,6 +304,7 @@ def generate_report(
                     provider, field,
                     pf_data["correct"], pf_data["total"],
                     f"{pf_data['accuracy']:.1f}",
+                    pf_data["hallucination"],
                 ])
             # Summary rows
             writer.writerow([
@@ -336,7 +343,21 @@ def generate_report(
         for prov in providers:
             acc = all_scores[prov]["overall"]["accuracy"]
             row += f" **{acc:.1f}%** |"
-        f.write(row + "\n")
+        f.write(row + "\n\n")
+        
+        # Hallucination count table
+        f.write("## Hallucination Count\n\n")
+        header = "| Field | " + " | ".join(providers) + " |\n"
+        sep = "|---|" + "|".join(["---"] * len(providers)) + "|\n"
+        f.write(header)
+        f.write(sep)
+
+        for field in SCORED_FIELDS:
+            row = f"| {field} |"
+            for prov in providers:
+                hal = all_scores[prov]["per_field"][field]["hallucination"]
+                row += f" {hal} |"
+            f.write(row + "\n")
 
         f.write("\n## Performance & Cost\n\n")
         f.write("| Metric | " + " | ".join(providers) + " |\n")
