@@ -1,4 +1,4 @@
-# Taxor — Multi-LLM Bill Extraction Evaluator & Zoho Books Integration
+# Multi-LLM Bill Extraction Evaluator & Zoho Books Integration
 
 > 🌐 **Live Web Application:** [https://web-production-b6918.up.railway.app](https://web-production-b6918.up.railway.app/)
 
@@ -10,7 +10,7 @@ Evaluate Gemini and Groq on extracting structured data from handwritten Indian b
 
 ```bash
 git clone <repo-url>
-cd taxor
+cd Bill-Extractor
 pip install -r requirements.txt
 ```
 
@@ -36,7 +36,7 @@ cp .env.example .env
 
 ### 3. Images & Ground Truth
 
-- Place bill images in `/images/` (`.jpg` or `.png`)
+- Place bill images in `/sample_bills/` (`.jpg` or `.png`)
 - Ensure `ground_truth.json` exists at the project root, keyed by filename stem
 
 ## Running Extraction

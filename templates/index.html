@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taxor — Bill Extraction Model Evaluator</title>
+    <title>Bill Extraction Model Evaluator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -59,27 +59,13 @@
             gap: 0.75rem;
         }
 
-        .logo-icon {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 800;
-            font-size: 1.2rem;
-            color: white;
-            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
-        }
-
         .logo-text h1 {
             font-family: 'Outfit', sans-serif;
             font-size: 1.4rem;
             font-weight: 700;
             letter-spacing: -0.02em;
             background: linear-gradient(90deg, #ffffff 0%, #cbd5e1 100%);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -524,10 +510,9 @@
 
     <header>
         <div class="logo-container">
-            <div class="logo-icon">T</div>
             <div class="logo-text">
-                <h1>Taxor</h1>
-                <p>Bill Extraction Evaluator</p>
+                <h1>Bill Extraction Evaluator</h1>
+                <p>Multi-LLM Model Benchmarking &amp; Evaluation</p>
             </div>
         </div>
         <div class="mode-badge">
@@ -568,7 +553,7 @@
                     <span id="imgFilename" style="font-size: 0.8rem; color: var(--text-muted);">None</span>
                 </div>
                 <div class="img-container">
-                    <img id="billPreview" src="" alt="Select or upload a bill" style="display: none;">
+                    <img id="billPreview" alt="Select or upload a bill" style="display: none;">
                     <div id="imgPlaceholder" style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 2rem;">
                         Select a sample bill or upload an image to view extractions
                     </div>
@@ -579,14 +564,14 @@
             <div class="model-card gemini-card" id="geminiCard">
                 <div class="loading-overlay" id="geminiLoader">
                     <div class="spinner"></div>
-                    <span style="font-size: 0.9rem; font-weight: 500;">Extracting with Gemini 2.5 Flash...</span>
+                    <span style="font-size: 0.9rem; font-weight: 500;">Extracting with Gemini 2.0 Flash...</span>
                 </div>
 
                 <div class="model-header">
                     <div class="model-title-badge">
                         <div class="model-icon gemini-icon">G</div>
                         <div class="model-name">
-                            <h2>Gemini 2.5 Flash</h2>
+                            <h2>Gemini 2.0 Flash</h2>
                             <div class="model-sub">Google AI Studio</div>
                         </div>
                     </div>
@@ -595,6 +580,8 @@
                         <div class="metric-pill">💵 <span class="metric-val" id="geminiCost">$0.000</span></div>
                     </div>
                 </div>
+
+                <div class="error-banner" id="geminiError" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.85rem; font-weight: 500;"></div>
 
                 <div class="fields-grid">
                     <div class="field-item">
@@ -649,7 +636,7 @@
             <div class="model-card groq-card" id="groqCard">
                 <div class="loading-overlay" id="groqLoader">
                     <div class="spinner"></div>
-                    <span style="font-size: 0.9rem; font-weight: 500;">Extracting with Groq Qwen 3.6...</span>
+                    <span style="font-size: 0.9rem; font-weight: 500;">Extracting with Qwen 3.6 27B Vision...</span>
                 </div>
 
                 <div class="model-header">
@@ -665,6 +652,8 @@
                         <div class="metric-pill">💵 <span class="metric-val" id="groqCost">$0.000</span></div>
                     </div>
                 </div>
+
+                <div class="error-banner" id="groqError" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.85rem; font-weight: 500;"></div>
 
                 <div class="fields-grid">
                     <div class="field-item">
@@ -853,7 +842,23 @@
 
             document.getElementById(`${prefix}Latency`).textContent = `${data.latency_seconds || 0}s`;
             document.getElementById(`${prefix}Cost`).textContent = `$${(data.estimated_cost_usd || 0).toFixed(4)}`;
-            document.getElementById(`${prefix}Raw`).textContent = data.raw_model_response || '';
+            const rawElem = document.getElementById(`${prefix}Raw`);
+            const rawText = data.raw_model_response || '';
+            rawElem.textContent = rawText;
+            const detailsElem = rawElem.closest('details');
+            if (detailsElem) {
+                detailsElem.open = rawText.includes('ERROR');
+            }
+
+            const errorBanner = document.getElementById(`${prefix}Error`);
+            if (errorBanner) {
+                if (rawText.startsWith('ERROR:')) {
+                    errorBanner.textContent = rawText;
+                    errorBanner.style.display = 'block';
+                } else {
+                    errorBanner.style.display = 'none';
+                }
+            }
 
             // Render Line Items
             const itemsTbody = document.getElementById(`${prefix}Items`);

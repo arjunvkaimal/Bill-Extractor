@@ -14,7 +14,7 @@ app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16 MB max upload
 UPLOAD_FOLDER = Path("uploads")
 UPLOAD_FOLDER.mkdir(exist_ok=True)
-IMAGES_FOLDER = Path("images")
+IMAGES_FOLDER = Path("sample_bills")
 RESULTS_FOLDER = Path("results")
 
 logging.basicConfig(level=logging.INFO)
@@ -52,7 +52,7 @@ def index():
 
 @app.route("/api/samples")
 def get_samples():
-    """List available sample bills in images/ directory."""
+    """List available sample bills in sample_bills/ directory."""
     if not IMAGES_FOLDER.exists():
         return jsonify([])
     
@@ -66,13 +66,14 @@ def get_samples():
             samples.append({
                 "id": stem,
                 "filename": p.name,
-                "url": f"/images/{p.name}",
+                "url": f"/sample_bills/{p.name}",
                 "has_cached": stem in gemini_data or stem in groq_data
             })
             
     return jsonify(samples)
 
 
+@app.route("/sample_bills/<filename>")
 @app.route("/images/<filename>")
 def serve_image(filename):
     return send_from_directory(IMAGES_FOLDER, filename)
@@ -114,7 +115,7 @@ def extract_live():
             candidate = IMAGES_FOLDER / f"{sample_id}{ext}"
             if candidate.exists():
                 img_path = str(candidate)
-                img_url = f"/images/{candidate.name}"
+                img_url = f"/sample_bills/{candidate.name}"
                 break
 
     if not img_path or not os.path.exists(img_path):
@@ -127,14 +128,24 @@ def extract_live():
         results["gemini"] = gemini.extract_bill(img_path)
     except Exception as e:
         logger.error("Live Gemini extraction failed: %s", e)
-        results["gemini"] = {"error": str(e)}
+        results["gemini"] = {
+            "vendor_name": None, "invoice_number": None, "date": None,
+            "amount": None, "currency": "INR", "gst_details": None,
+            "raw_model_response": f"ERROR: {type(e).__name__}: {e}",
+            "latency_seconds": 0.0, "estimated_cost_usd": 0.0
+        }
 
     # Run Groq extraction
     try:
         results["groq"] = groq.extract_bill(img_path)
     except Exception as e:
         logger.error("Live Groq extraction failed: %s", e)
-        results["groq"] = {"error": str(e)}
+        results["groq"] = {
+            "vendor_name": None, "invoice_number": None, "date": None,
+            "amount": None, "currency": "INR", "gst_details": None,
+            "line_items": [], "raw_model_response": f"ERROR: {type(e).__name__}: {e}",
+            "latency_seconds": 0.0, "estimated_cost_usd": 0.0
+        }
 
     results["image_url"] = img_url
     return jsonify(results)

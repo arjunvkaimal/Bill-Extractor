@@ -51,9 +51,10 @@ def extract_bill(image_path: str) -> dict:
         "estimated_cost_usd": 0.0,
     }
 
-    api_key = os.environ.get("GROQ_API_KEY")
+    api_key = (os.environ.get("GROQ_API_KEY") or "").strip()
     if not api_key:
-        raise EnvironmentError("GROQ_API_KEY is not set in environment variables.")
+        result["raw_model_response"] = "ERROR: GROQ_API_KEY environment variable is missing on the server. Please add GROQ_API_KEY in Railway -> Variables."
+        return result
 
     try:
         with open(image_path, "rb") as f:

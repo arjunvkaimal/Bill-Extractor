@@ -16,9 +16,9 @@ from extractors.prompt import EXTRACTION_PROMPT
 logger = logging.getLogger(__name__)
 
 # Gemini 2.5 Flash pricing (per 1M tokens)
-_INPUT_COST_PER_M = 0.30
-_OUTPUT_COST_PER_M = 2.50
-_MODEL = "gemini-3.5-flash"
+_INPUT_COST_PER_M = 0.10
+_OUTPUT_COST_PER_M = 0.40
+_MODEL = "gemini-2.0-flash"
 
 
 def _estimate_cost(input_tokens: int, output_tokens: int) -> float:
@@ -28,7 +28,7 @@ def _estimate_cost(input_tokens: int, output_tokens: int) -> float:
 
 def extract_bill(image_path: str) -> dict:
     """
-    Extract structured data from a bill image using Gemini 2.5 Flash.
+    Extract structured data from a bill image using Gemini 1.5 Flash.
 
     Args:
         image_path: Absolute or relative path to the bill image.
@@ -49,9 +49,10 @@ def extract_bill(image_path: str) -> dict:
         "estimated_cost_usd": 0.0,
     }
 
-    api_key = os.environ.get("GOOGLE_API_KEY")
+    api_key = (os.environ.get("GOOGLE_API_KEY") or "").strip()
     if not api_key:
-        raise EnvironmentError("GOOGLE_API_KEY is not set in environment variables.")
+        result["raw_model_response"] = "ERROR: GOOGLE_API_KEY environment variable is missing on the server. Please add GOOGLE_API_KEY in Railway -> Variables."
+        return result
 
     try:
         with open(image_path, "rb") as f:

@@ -132,8 +132,8 @@ def main():
     parser.add_argument(
         "--images-dir",
         type=str,
-        default="./images",
-        help="Directory containing bill images (default: ./images)",
+        default="./sample_bills",
+        help="Directory containing bill images (default: ./sample_bills)",
     )
     parser.add_argument(
         "--output-dir",
